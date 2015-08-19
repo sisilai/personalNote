@@ -1,0 +1,19 @@
+storehouse_id
+
+消耗分析
+consumption analysis
+
+"consumptionAnalysis":"库存消耗分析"
+
+http://127.0.0.1:5000/bill/consumptionAnalysis.html Failed to load resource: the server responded with a status of 404 (Not Found)
+http://127.0.0.1:5000/bill/js/consumptionAnalysis.js Failed to load resource: the server responded with a status of 404 (Not Found)
+http://127.0.0.1:5000/bill/consumptionAnalysis.html Failed to load resource: the server responded with a status of 404 (Not Found)
+
+
+ConsumptionWay
+
+storehouseItemName
+
+Cate
+
+storehouseName
