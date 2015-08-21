@@ -1,20 +1,152 @@
-storehouse_id
+仓库
 
-消耗分析
-consumption analysis
+表名：tb_storehouse
 
-"consumptionAnalysis":"库存消耗分析"
+字段：
 
-http://127.0.0.1:5000/bill/consumptionAnalysis.html Failed to load resource: the server responded with a status of 404 (Not Found)
-http://127.0.0.1:5000/bill/js/consumptionAnalysis.js Failed to load resource: the server responded with a status of 404 (Not Found)
-http://127.0.0.1:5000/bill/consumptionAnalysis.html Failed to load resource: the server responded with a status of 404 (Not Found)
+id：仓库的id
+
+number：仓库编号
+
+name：仓库名称
+
+description：仓库说明
+
+default_storehouse：是否默认仓库（如果分店有多个仓库，销售卖品的时候从默认仓库出库。保留备用）
+
+create_date：创建时间
+
+modify_date：修改时间
+
+master_id：仓库对应分店的master_id
+
+enterprise_id：仓库对应分店的enterprise_id
+
+status：仓库是否可用
+
+库存项目
+
+表名：tb_storage_item
+
+字段：
+
+id：id
+
+storage_cate_id：库存分类id（保留）
+
+relate_id：库存项目所关联的卖品项目（库存项目为“销售品”的时候，可以选择与卖品关联）
+
+type：库存项目类型（1：消耗品，2：销售品）
+
+number：编号
+
+name：名称
+
+image：图片
+
+model：规格型号（保留）
+
+unit：单位（保留）
+
+price：物品单价
+
+manufacturer：制造商（保留）
+
+description：说明
+
+create_date：创建时间
+
+modify_date：修改时间
+
+master_id：仓库对应分店的master_id
+
+enterprise_id：仓库对应分店的enterprise_id（保留）
+
+status：状态
+
+存储列表
+
+表名：tb_storage_list
+
+字段：
+
+id：id
+
+storehouse_id：仓库的id
+
+storage_item_id：库存项目id
+
+count：数量
+
+create_date：创建时间
+
+modify_date：修改时间
+
+master_id：仓库对应的master_id
+
+enterprise_id：仓库对应分店的enterprise_id（保留）
+
+status：状态
+
+出入库记录
+
+表名：tb_storage_record
+
+字段：
+
+id：id
+
+bill_id：售出时对应的bill_id
+
+type：出入库类型（1：调配，2：进货，3：退货，4：店用消耗，5：售出，6：校正）
+
+from_storehouse：出库仓库
+
+to_storehouse：入库仓库
+
+date_time：出入库时间
+
+create_date：创建时间
+
+master_id：仓库对应的master_id
+
+enterprise_id：仓库对应分店的enterprise_id（保留）
+
+employee_id：操作员工
+
+comment：备注
+
+status：状态
 
 
-ConsumptionWay
+    var storehouseId = _s.trim(req.param("storehouseId"));//仓库名
+    var storageType = _s.trim(req.param("storageType"));//类别
+    var storageName = _s.trim(req.param("storageName"));//品名
+    var consumptionWay = _s.trim(req.param("consumptionWay"));//消耗方式
 
-storehouseItemName
+select a.id as storehouseId,a.name as storehouseName,b.id as storageItemId,b.name as storageItemName,b.type as storageItemType,b.number as storageItemNumber,
+c.id as storageRecordId,c.type as consumptionWay,c.date_time,
+d.storage_record_id as storageRecordId,d.amount as consumptionnumber,d.unit_price as consumptionPrice
+from tb_storehouse a, tb_storage_item b,tb_storage_record c,tb_storage_record_items d where d.master_id = :master_id
+ and d.storage_record_id = c.id and d.storage_item_id = b.id
+出入库物品
 
-Cate
+表名：tb_storage_record_items
 
-storehouseName
-仓库名：	类别：	货号	品名	消耗方式	消耗数量	消耗成本
+id：id
+
+storage_record_id：对应的出入库记录id
+
+storage_type_id：商品所属的存储项目id
+
+amount：物品数量
+
+unit_price：物品单价（保留）
+
+comment：备注
+
+create_date：创建时间
+
+master_id：仓库对应的master_id
+
+enterprise_id：仓库对应分店的enterprise_id（保留）
