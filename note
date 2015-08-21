@@ -135,6 +135,9 @@ from tb_storehouse a, tb_storage_item b,tb_storage_record c,tb_storage_record_it
 
 id：id
 
+http://127.0.0.1:5000/svc/chain/consumptionAnalysisReports?startTime=1436258847678&endTime=1440146847678&storehouseId=all&storageItemType=all&storageItemName=&consumptionWay=all&page=1&pageSize=50&orderBy=consumptionCount&order=asc
+
+
 storage_record_id：对应的出入库记录id
 
 storage_type_id：商品所属的存储项目id
