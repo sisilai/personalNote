@@ -1,1 +1,3 @@
-storageItemRecords.length > 0
+数据查看 》 经营流水 》 修改时间 》 撤销流水时间
+在 tb_storage_record 根据bill_id 修改 date_time
+
