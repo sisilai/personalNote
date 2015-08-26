@@ -1,7 +1,18 @@
 type：出入库类型（1：调配，2：进货，3：退货，4：店用消耗，5：售出，6：校正）
 
- 4 店用消耗
+$$hashKey: "07I"
+billId: null
+comment: "101010"
+dateTime: 1440471550001
+fromStorehouseId: "622ff610-44c3-11e5-9d0c-45942c31873d"
+id: "41f93a10-4ad5-11e5-a207-558c5eb1def5"
+inOrOut: "出库"
+itemAmount: 1
+itemId: "1"
+itemName: "我原来叫1的"
+status: 1
+toStorehouseId: null
+type: 4
+typeDescription: "店用消耗"
 
- 3 退货
- 1 调配
- 6 校正
+dbHelper.bacthExecSql(sqlArray
