@@ -1,0 +1,14 @@
+{
+  "name": "myApp",
+  "version": "1.0.0",
+  "description": "fun",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "sisilai",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
