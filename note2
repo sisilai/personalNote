@@ -1,16 +1,7 @@
-问题4讨论结果
-没有填写备注也可以新增库房
-新增库房后选中新增的库房
-
-问题7的讨论结果
-新增的库房排在上面   分店的库房排在下面
-而且还要带有颜色标记区分，新增的为红色，分店的仓库为蓝色
-这边的顺序与库存配置页面显示库房的顺序要一致
-
-问题13的讨论结果
-13.库存查询，点击货物后，货物的变动流水中，调配没有显示调配路径。需要将路径显示出来，否则无法追溯每一笔货物变化。
-问题14的讨论结果
-14.库存查询详情界面中，左侧边栏占据位置太大，显示为两倍的图片宽度就差不多了。
-15.库存撤销逻辑不对。分店中应该无法对非自身操作行为进行撤销。如总店向其调拨的货物，分店不能为所欲为撤销之。只能撤销自身的店用消耗，连平板收银都无法直接在此撤销。必须撤销了消费流水，而间接撤销。
-17.店用物品，在库存查询界面，图标上不要显示成本，只显示数量即可。
-19.卖品也能作为店内消耗。并确认时增加提示： 只不过在录入时，会有提示，你确定卖品被店铺消耗了？若正常卖出，请使用平板收银
+sql记录:select sr.id,sr.bill_id,sr.type,sr.from_storehouse,sr.to_storehouse,sr.date_time,sr.employee_id,sr.comment,
+sr.status,sr.member_id,sr.member_name,sri.storage_item_id,abs(sri.amount) amount,sri.employee_id employee_ids
+from tb_storage_record sr,tb_storage_record_items sri where sr.id = sri.storage_record_id and sr.master_id = sri.master_id and
+sr.master_id = :masterId and sri.storage_item_id = :storageItemId and sr.status != :status and sr.date_time between :startTime and :endTime
+and (sr.from_storehouse = :storehouseId or sr.to_storehouse = :storehouseId) and
+sr.enterprise_id in (:columnName0,:columnName1,:columnName2,:columnName3,:columnName4,:columnName5) order by sr.date_time desc
+cond记录:[object Object]
