@@ -1,7 +1,46 @@
-sql记录:select sr.id,sr.bill_id,sr.type,sr.from_storehouse,sr.to_storehouse,sr.date_time,sr.employee_id,sr.comment,
-sr.status,sr.member_id,sr.member_name,sri.storage_item_id,abs(sri.amount) amount,sri.employee_id employee_ids
-from tb_storage_record sr,tb_storage_record_items sri where sr.id = sri.storage_record_id and sr.master_id = sri.master_id and
-sr.master_id = :masterId and sri.storage_item_id = :storageItemId and sr.status != :status and sr.date_time between :startTime and :endTime
-and (sr.from_storehouse = :storehouseId or sr.to_storehouse = :storehouseId) and
-sr.enterprise_id in (:columnName0,:columnName1,:columnName2,:columnName3,:columnName4,:columnName5) order by sr.date_time desc
-cond记录:[object Object]
+$$hashKey: "00T"
+count: 0
+description: null
+id: "05ea8be0-4b12-11e5-9525-25df97601791"
+image: null
+master_id: "218136000100"
+name: "  JESSICA脚跟修补霜"
+number: null
+price: "¥0"
+    relate_id: "c5b32085-9584-11e4-b865-a760eff9fde8"
+selected: false
+show_image: "/product/img/default-picture.png"
+storage_cate_id: "c5b2f98e-9584-11e4-b865-a760eff9fde8"
+type: 2
+
+
+3: Object
+count: 997
+enterprise_id: "126560002257100"
+id: "24dc9100-4d52-11e5-a53e-4b916dcb620c"
+master_id: "218136000100"
+relate_id: "c5b40ae4-9584-11e4-b865-a760eff9fde8"
+storage_item_id: "18c07470-4c87-11e5-991b-ab11e5f2d7b3"
+storehouse_id: "0d0b2781-4d52-11e5-a53e-4b916dcb620c"
+__proto__: Object
+
+y_product_item
+
+
+                                        <div>
+                                            <span class="inlinebl">
+                                                <span class="text-left" style="width: 50%;">{{item.prices_salesPrice
+                                                    }}</span>
+                                                <span class="text-left" style="width: 50%;padding-left: 5px;">{{item.count | number:0}}</span>
+                                            </span>
+                                        </div>
+
+
+
+                                        <div>
+                                            <span class="inlinebl">
+                                                <span class="text-left" style="width: 50%;">{{item.prices_salesPrice
+                                                    }}</span>
+                                                <span class="text-left" style="width: 50%;padding-left: 5px;">{{item.count | number:0}}</span>
+                                            </span>
+                                        </div>
