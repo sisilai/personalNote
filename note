@@ -3,3 +3,8 @@ $scope.view.itemCategoryList.length
 
 
 updateStorehouse
+
+自增
+auto_increment
+
+name varchar(10) not null comment '这个是这个字段的描述',
