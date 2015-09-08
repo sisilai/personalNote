@@ -1,16 +1,46 @@
-问题4讨论结果
-没有填写备注也可以新增库房
-新增库房后选中新增的库房
+$$hashKey: "00T"
+count: 0
+description: null
+id: "05ea8be0-4b12-11e5-9525-25df97601791"
+image: null
+master_id: "218136000100"
+name: "  JESSICA脚跟修补霜"
+number: null
+price: "¥0"
+    relate_id: "c5b32085-9584-11e4-b865-a760eff9fde8"
+selected: false
+show_image: "/product/img/default-picture.png"
+storage_cate_id: "c5b2f98e-9584-11e4-b865-a760eff9fde8"
+type: 2
 
-问题7的讨论结果
-新增的库房排在上面   分店的库房排在下面
-而且还要带有颜色标记区分，新增的为红色，分店的仓库为蓝色
-这边的顺序与库存配置页面显示库房的顺序要一致
 
-问题13的讨论结果
-13.库存查询，点击货物后，货物的变动流水中，调配没有显示调配路径。需要将路径显示出来，否则无法追溯每一笔货物变化。
-问题14的讨论结果
-14.库存查询详情界面中，左侧边栏占据位置太大，显示为两倍的图片宽度就差不多了。
-15.库存撤销逻辑不对。分店中应该无法对非自身操作行为进行撤销。如总店向其调拨的货物，分店不能为所欲为撤销之。只能撤销自身的店用消耗，连平板收银都无法直接在此撤销。必须撤销了消费流水，而间接撤销。
-17.店用物品，在库存查询界面，图标上不要显示成本，只显示数量即可。
-19.卖品也能作为店内消耗。并确认时增加提示： 只不过在录入时，会有提示，你确定卖品被店铺消耗了？若正常卖出，请使用平板收银
+3: Object
+count: 997
+enterprise_id: "126560002257100"
+id: "24dc9100-4d52-11e5-a53e-4b916dcb620c"
+master_id: "218136000100"
+relate_id: "c5b40ae4-9584-11e4-b865-a760eff9fde8"
+storage_item_id: "18c07470-4c87-11e5-991b-ab11e5f2d7b3"
+storehouse_id: "0d0b2781-4d52-11e5-a53e-4b916dcb620c"
+__proto__: Object
+
+y_product_item
+
+
+                                        <div>
+                                            <span class="inlinebl">
+                                                <span class="text-left" style="width: 50%;">{{item.prices_salesPrice
+                                                    }}</span>
+                                                <span class="text-left" style="width: 50%;padding-left: 5px;">{{item.count | number:0}}</span>
+                                            </span>
+                                        </div>
+
+
+
+                                        <div>
+                                            <span class="inlinebl">
+                                                <span class="text-left" style="width: 50%;">{{item.prices_salesPrice
+                                                    }}</span>
+                                                <span class="text-left" style="width: 50%;padding-left: 5px;">{{item.count | number:0}}</span>
+                                            </span>
+                                        </div>
