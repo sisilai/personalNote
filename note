@@ -1,22 +1,4 @@
-$scope.view.itemCategoryList.length
-$scope.view.itemCategoryList.length
+零售价正负1都可以搜索到
 
-
-updateStorehouse
-
-自增
-auto_increment
-
-name varchar(10) not null comment '这个是这个字段的描述',
-
-7b4e262c-aa8c-11e4-bdf0-9f214ff2d341
-
-218136000100
-
-select id,name from tb_service where serviceCategory_id = '7b4e262c-aa8c-11e4-bdf0-9f214ff2d341' and master_id = '218136000100'
-
-看看git可不可用了？
-
-insert into planx_graph.tb_access values ('23434cb0-7082-11e4-9f7f-9369a8c34ecf-9', '库存品出入库撤销', 'store.storageInOrOutRevocation', '23434cb0-7082-11e4-9f7f-9369a8c34ecf', null, '1441008570602', null, null);
-
-insert into planx_graph.tb_access values ('23434cb0-7082-11e4-9f7f-9369a8c34ecf-10', '新建库房', 'store.storehouseNew', '23434cb0-7082-11e4-9f7f-9369a8c34ecf', null, '1441620898841', null, null);
+search = Math.abs(search-x)<=1
+where x beentween search-1 and search+1
