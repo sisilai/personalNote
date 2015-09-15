@@ -4,37 +4,22 @@
 var express = require('express');
 var app = express();
 
-//var app = require('express')();
-
-app.get('/', function (req, res) {
-    res.send('Hello World!111111');
+// 一个中间件栈，处理指向 /user/:id 的 GET 请求
+app.get('/user/:id', function (req, res, next) {
+    console.log('ID:', req.params.id);
+    next();
+}, function (req, res, next) {
+    res.send('User Info');
 });
 
-app.get('/example/b', function (req, res, next) {
-    console.log('response will be sent by the next function ...')
-    next()
-}, function (req, res) {
-    res.send('Hello from B!')
-});
-
-// will match anything with an a in the route name:
-app.get(/a/, function(req, res) {
-    res.send('/a/')
-})
-
-// will match butterfly, dragonfly; but not butterflyman, dragonfly man, and so on
-app.get(/.*fly$/, function(req, res) {
-    res.send('/.*fly$/')
-})
-
-app.get('/s', function (req, res) {
-    res.send('Hello World!111111sss');
+// 处理 /user/:id， 打印出用户 id
+app.get('/user/:id', function (req, res, next) {
+    res.end(req.params.id);
 });
 
 var server = app.listen(3000, function () {
-    var host = server.address().address;
-    var port = server.address().port;
-    var __dirname = '1';
-    console.info(__dirname);
+    var host = server.address('127.0.0.1:80').address;
+    var port = server.address('127.0.0.1:80').port;
+
     console.log('Example app listening at http://%s:%s', host, port);
 });
