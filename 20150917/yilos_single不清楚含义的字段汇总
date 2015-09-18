@@ -1,0 +1,108 @@
+表
+    字段  ?(什么含义呢)
+tb_billproject
+    cashAndBankPer
+    cardPer
+
+tb_biz_performance_d
+    card
+    bank
+    syncindex
+    synctag
+    status
+tb_chain_user_relation
+    tb_chain_user_relationcol
+tb_coupon_servicecate
+    status
+tb_crm_trace
+    traceStatus
+    status
+tb_customer_count_d
+    temp
+tb_empbonus
+    type
+    befDisMoney
+tb_empbonusrule
+    ruleType
+    value1
+    value2
+    value3
+    value4
+    type
+tb_enterprise
+    brief_introduce
+    business
+    corporation
+    money
+    register_time
+    date_register
+    sex
+    version_time
+    version_type
+    type
+tb_item_pay_way_detail
+    way_id
+    reduce
+    status
+tb_job
+    ruleType
+    bonus_newRecordCard
+    bonus_recordCardConsume
+tb_member
+    sex
+    status
+    married
+    child
+    tempMember
+tb_member_tag
+    min_balance
+    max_balance
+tb_memberaccessory
+    no
+    type
+    name
+    numberofuse
+    periodOfValidity
+tb_memberaccessoryattrmap
+    ?(目前该表没有数据)
+tb_memberaccessoryentity
+    accessoryId
+    numberofuse
+    status
+tb_membercard
+    periodOfValidity
+    rechargeRule_presenterMoney
+    rechargeRule_rule
+    rechargeRule_totalMoney
+    recharge_money
+    scoreRule_rule
+    scoreRule_score
+    scoreRule_totalMoney
+tb_membercardattrmap
+    groupName
+    keyName
+    value
+    status
+tb_membercardcategory
+    baseInfo_type
+    cardNoGenRule_cardNoPrefix
+    cardNoGenRule_cardNoLen
+    rechargeRule_rule
+    rechargeRule_presenterMoney
+    rechargeRule_totalMoney
+    scoreRule_rule
+    scoreRule_presenterScore
+    scoreRule_totalMoney
+    activeCardPresentScore
+    rechargePresentScore
+    consumePresentScore
+    activeCardPresentMoney
+    discountType
+    inverse_ratio
+    record_money
+tb_operateitem
+    code
+tb_paymentdetail
+    times_2_money
+    status
+tb_rechargememberbill（整理到这张表了）
