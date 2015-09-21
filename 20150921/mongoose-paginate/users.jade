@@ -1,0 +1,17 @@
+//
+   Created by sisilai on 2015/9/21.
+
+//- users.jade
+h1 Users
+//- this will simply generate a link to sort by name
+//- note how we only have to pass the querystring param
+//- that we want to modify here, not the entire querystring
+a(href=paginate.href({sort: 'name'})) Sort by name
+//- this assumes you have `?age=1` or `?age=-1` in the querystring
+//- so this will basically negate the value and give you
+//- the opposite sorting order (desc with -1 or asc with 1)
+a(href=paginate.href({sort: req.query.age === '1' ? -1 : 1})) Sort by age
+ul
+   each user in users
+      li= user.email
+include _paginate
