@@ -1,0 +1,54 @@
+        //从消费列表在中移除某商品
+        $scope.deleteProductInOrder = function (product)
+
+        //修改单项产品价格弹出框
+        $scope.changeProductPrice = function (product)
+
+        //修改单项产品价格提交
+        $scope.changeProductPriceCommit = function (price)
+
+
+        $scope.showServiceEmpSelect = function ()
+
+        $scope.serviceEmpSelect = function (employee)
+
+        $scope.serviceEmpSelectCommit = function ()
+
+        $scope.changeServiceEmployee = function (product)
+
+        $scope.serviceEmpChange = function (employee)
+
+        $scope.serviceEmpChangeCommit = function ()
+
+        //改价输入
+        $scope.changePriceInput = function (key)
+
+        //清空单服务单所有信息
+        $scope.clearOrder = function ()
+
+        //撤销当前单
+        $scope.cancelOrder = function ()
+
+        //弹出会员选择框
+        $scope.showMemberSel = function ()
+
+        //结算确认弹出窗
+        $scope.openCheckoutConfirmDia = function ()
+
+        $scope.getEmpName = function (employeeId)
+
+        //同步保护标志重置
+        $scope.resetSyncFlag = function ()
+
+        //确认License过期确认行为
+        $scope.conformLicenseAlarm = function ()
+
+        $scope.sendMsg = function (msgArg)
+
+        $scope.clearServiceCache = function ()
+
+        $scope.showDialogError = function (dialogId, msg, delay)
+
+        $scope.initOrFreshOrderListIScroll = function (scrollToTop)
+
+        $scope.isCompleteSameItem = function (itemA, itemB)

@@ -1,0 +1,331 @@
+checkout.js： 收银台控制
+    model参数模型设计如下：
+    var model = {
+            productCategorieMap: {},    //可以选择的产品和服务类别对应的产品服务列表
+            productCategories: {},      //类型ID与类型信息的映射
+            productViewArray: [],       //界面需要展示的产品列表
+
+            productCategorySelected: "memberRelItem",
+
+            productSelected: {},        //操作当前选中的商品、可进行数量更改、从购买列表中去除等
+            buyProductRecords: [],      //购买商品列表
+
+            memberList: [],
+            memberSelected: {},
+            memberSearch: "",
+
+            //金额收入状态、界面上一些不可更改的显示信息
+            incomeStatus: {
+                totalMoney: 0,
+                discountMoney: 0,
+                paidMoney: 0,
+                rechargeCard: 0,
+                recordCard: 0,
+                rechargeCardOldPrice: 0,
+                recordCardOldPrice: 0,
+                servicePayTimes: {},
+                payTimes: 0,
+                multiCardOverMoney: 0,
+                rechargeCardPresentScore: 0
+            },
+
+            //支付状态，折扣，减免，会员卡，现金...可在界面上更改
+            payStatus: {
+                billDiscount: featureConf.defaultDiscount,
+                billReduce: 0,
+                cashPay: 0,
+                cashChange: 0,
+                bankPay: 0,
+                cardPay: 0,
+                couponPayList: []
+            },
+
+            //支付方式实际支付金额
+            pay: {
+                cash: 0,
+                prePaidCard: 0,
+                quarterCardTimes: 0,
+                cardTimes: 0,
+                bank: 0,
+                coupon: 0
+            },
+
+            employeeList: [],
+            employeeSelected: {},
+
+            view: {},
+
+            sysMsgOptions: {
+                msgContent: [],
+                currentIndex: 0
+            },
+
+            numKeyList: numKeyboard.getKeyList(),//键盘按键集合
+
+            bonusMode: 'real', //real|original
+
+            itemSearch: "",
+
+            memberRelItem: [],
+
+            //new add
+
+            serviceIdNameMap: {}, //服务ID和name键值对集合
+
+            rechargeCateList: []，//充值类别列表
+
+            allCardList: [], //所有卡列表
+
+            cateId2CardCate: {}, //卡ID和卡类别对应集合
+
+            msgSwitch：{}, //消息开关集合
+
+            ticketSwitch: {}, //小票格式开关集合
+        };
+
+    //异步加载数据模型，包括初始化数据模型
+    function loadModelAsync(callback)
+
+    //初始化数据模型
+    function initModel(model, callback)
+        callback(null, model);
+
+        //将Model往下传
+        function transferModel(callback)
+            callback(null, model);
+
+        //初始化页面数据模型
+        function initPageData(model, callback)
+            如果错误，则callback(error);
+            如果成功，则callback(null);
+
+        //初始化员工数据
+        function initEmployeeData(model, callback)
+            如果错误，则callback(error);
+            如果成功，则callback(null, model);
+
+        //初始化服务数据
+        function initServiceData(model, callback)
+            如果错误，则callback(error);
+            如果成功，则callback(null, model);
+
+        //初始化会员类别列表
+        function initMemberCateList(model, callback)
+            如果错误，则callback(error);
+            如果成功，则callback(null, model);
+
+        //初始化消息开关
+        function initMsgSwitch(model, callback)
+            如果错误，则callback(error);
+            如果成功，则callback(null, model);
+
+        //初始化小票格式开关
+        function initTicketSwitch(model, callback)
+            如果错误，则callback(error);
+            如果成功，则callback(null, model);
+
+        //初始化提成模式
+        function initBonusMode(model, callback)
+            如果错误，则callback(error);
+            如果成功，则callback(null, model);
+
+    //初始化控制器
+    function initController($scope, $location)
+        //刷新Scope、
+        $scope.digestScope = function ()
+
+        //关闭模态对话框
+        $scope.modalDialogClose = function ()
+
+        //选择类别
+        $scope.choiceCate = function (cate, key)
+        参数：
+            cate: {
+                     id:'xxx',
+                     name:'xxx'
+                  }
+            key: cate.id
+
+        //选择会员卡类别
+        $scope.choiceCardItem = function ()
+
+        //选择会员关系
+        $scope.choiceMemberRelItem = function ()
+
+        //选择搜索
+        $scope.choiceItemSearch = function ()
+
+        //搜索框获取焦点
+        $scope.searchBlur = function ()
+
+        //清空搜索框内容
+        $scope.clearItemSearch = function ()
+
+        //过滤项目或者卡列表数组
+        function filterItemOrCardList(itemOrCardList, filterCondition)
+        参数：
+            itemOrCardList：项目或者卡列表数组
+            filterCondition: 过滤条件
+        返回：前50个元素符合条件对象组成的数组
+
+        //项目是否被选中
+        $scope.isProductSelected = function (product)
+        参数：
+            product：项目对象
+        返回：
+            true: 选中
+            false: 没有选中
+
+        //选择消费商品
+        $scope.selectProduct = function (product, count)
+        参数：
+            product：项目对象
+            count:选择添加的数量、不传递默认为1
+
+        //移除多卡支付的状态
+        $scope.removeItemPayInfo = function (product)
+        参数：
+            product：项目对象
+
+        //删除所有的支付信息
+        $scope.removeAllItemPayInfo = function ()
+
+        //选中订单中商品
+        $scope.selectProductOrder = function (product)
+        参数：
+            product：项目对象
+
+        //对消费商品中选中项进行数量增加
+        $scope.addProductOrderNum = function (product)
+        参数：
+            product：项目对象
+
+        //对消费商品中选中项进行数量减少
+        $scope.reduceProductOrderNum = function (product)
+        参数：
+            product：项目对象
+
+        $scope.changeProductSaleNum = function (product)
+        参数：
+            product：项目对象
+
+        //从消费列表在中移除某商品
+        $scope.deleteProductInOrder = function (product)
+        参数：
+            product：项目对象
+
+        //修改单项产品价格弹出框
+        $scope.changeProductPrice = function (product)
+        参数：
+            product：项目对象
+
+        //修改单项产品价格提交
+        $scope.changeProductPriceCommit = function (price)
+        参数：
+            price：项目对象的价格
+
+        //显示服务员工选择对话框
+        $scope.showServiceEmpSelect = function ()
+
+        //服务员工选择
+        $scope.serviceEmpSelect = function (employee)
+        参数：
+            employee：员工对象
+
+        //服务员工选择提交
+        $scope.serviceEmpSelectCommit = function ()
+
+        //显示改变服务选择员工对话框
+        $scope.changeServiceEmployee = function (product)
+        参数：
+            product：项目对象
+
+        //改变服务员工
+        $scope.serviceEmpChange = function (employee)
+        参数：
+            employee：员工对象
+
+        //服务员工改变提交
+        $scope.serviceEmpChangeCommit = function ()
+
+        //改价输入
+        $scope.changePriceInput = function (key)
+        参数：
+            key: 键盘按键集合中的某一个键
+
+        //清空单服务单所有信息
+        $scope.clearOrder = function ()
+
+        //撤销当前单
+        $scope.cancelOrder = function ()
+
+        //弹出会员选择框
+        $scope.showMemberSel = function ()
+
+        //结算确认弹出窗
+        $scope.openCheckoutConfirmDia = function ()
+
+        $scope.getEmpName = function (employeeId)
+        参数：
+            employeeId: 员工ID
+
+        //同步保护标志重置
+        $scope.resetSyncFlag = function ()
+
+        //确认License过期确认行为
+        $scope.conformLicenseAlarm = function ()
+
+        //发送短信
+        $scope.sendMsg = function (msgArg)
+        参数：
+            msgArg: 短信发送内容
+
+        //清理服务缓存
+        $scope.clearServiceCache = function ()
+
+        //弹出错误对话框
+        $scope.showDialogError = function (dialogId, msg, delay)
+        参数：
+            dialogId: html标签Id
+            msg: 错误提示信息
+            delay: 延迟（毫秒）
+
+        //初始化或者刷新项目和订单列表滚动条
+        $scope.initOrFreshOrderListIScroll = function (scrollToTop)
+        参数：
+            scrollToTop: 如果该参数为true，滚动到顶部
+
+        //判断是否是同一个项目
+        $scope.isCompleteSameItem = function (itemA, itemB)
+        参数：
+            itemA: 某一项目A对象
+            itemB: 另某一项目B对象
+        返回：
+            true: 同一对象
+            false: 不同对象
+
+    //该函数没有实现
+    function init()
+
+    //页面加载完成后可调用该方法
+    function afterPageLoaded()
+
+    //切换菜单
+    function switchMenu()
+
+    //该函数没有实现
+    function paramsChange(params)
+
+    //适应页面高度
+    function adjustHeight()
+
+    scrollToTop: 如果该参数为true，滚动到顶部
+    //初始化或者刷新项目滚动条
+    function initOrFreshProductIScroll(scrollToTop)
+    参数：
+        scrollToTop: 如果该参数为true，滚动到顶部
+
+    //初始化或者刷新订单列表滚动条
+    function initOrFreshOrderListIScroll(scrollToTop)
+    参数：
+        scrollToTop: 如果该参数为true，滚动到顶部
