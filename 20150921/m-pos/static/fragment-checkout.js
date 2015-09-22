@@ -1,7 +1,8 @@
-注意以下表示
-xxx：表示任意字符
-...：表示以此类推
-fragment-checkout.js： 收银台模块
+define(function (require, exports, module) {
+    var utils = require("mframework/static/package").utils; 			//全局公共函数
+    var featureDataI = require("./checkout-dataI.js");
+    var numKeyboard = require("mframework/static/package").numKeyboard;
+
     //该方法没有实现
     function initModel(model, callback) {
 

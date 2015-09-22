@@ -1,4 +1,12 @@
-fragment-member.js:收银提成选择模块
+//收银提成选择模块
+define(function (require, exports, module) {
+
+    var utils = require("mframework/static/package").utils; 			//全局公共函数
+    var featureDataI = require("./checkout-dataI.js");
+    var numKeyboard = require("mframework/static/package").numKeyboard;
+    var memberDao = require("m-dao/static/package").memberDao;
+    var ticketDao = require("m-dao/static/package").ticketDao;
+
     //初始化模型
     function initModel(model) {
         model.recordCardRecTimes = [1, 2];

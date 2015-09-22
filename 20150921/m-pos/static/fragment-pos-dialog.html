@@ -1,0 +1,210 @@
+<!-- 打分和密码确认弹出窗 -->
+<div id="m-pos-evaluation" class="y_dialog pos_big_dialog">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">
+                消费评分{{needToConfirmPassword() ? "及密码确认" : ""}}
+            </div>
+        </div>
+        <div class="y_close" ng-tap="modalDialogClose()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body pos_big_dialog_body">
+        <div class="fl pt-2 pl-2">
+            <div>
+                <span class="fs-14">消费评分：</span>
+
+                <li class="inlinebl"
+                    ng-repeat="item in view.evaluationList"
+                    ng-tap="view.evaluation = item;">
+
+                    <span class="y_select_tag h-3 lh-3 pl-2 pr-2"
+                          ng-class="{y_select_tag_selected:view.evaluation === item}">
+                        {{showEvaluationSelect.evaluationTrans[item]}}
+                    </span>
+                </li>
+            </div>
+
+            <div ng-if="needToConfirmPassword()"
+                 class="mt-2 fs-14">
+                <label>
+                    消费密码：
+                </label>
+
+                <span class="inlinebl w-10 y_underline_input y_underline_input_selected">
+                    &nbsp;{{view.passwordShow}}
+                </span>
+            </div>
+        </div>
+
+        <div class="fr mr-2"
+             ng-if="needToConfirmPassword()">
+            <ul class="y_keyboard mt-2">
+                <li ng-repeat="item in numKeyList" ng-tap="passwordInput(item)">
+                    {{item}}
+                </li>
+            </ul>
+            <div class="pos_dialog_tips">请选择一位会员</div>
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="back2PreviousDialog()">上一步</div>
+
+        <div class="y_confirm" ng-tap="checkoutCommit()">确认</div>
+    </div>
+</div>
+
+<!-- 服务员工选择 -->
+<div id="m-pos-service-employee-select" class="y_dialog_small">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step fs-16">
+                请选择服务员工
+            </div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body">
+        <div style="border-radius: 4px;" class="border_all h-3 m-0_5 ofh">
+            <span class="y_icon_search"></span>
+
+            <input type="text" class="w-28 no_border fs-14" style="height: 34px;"
+                   ng-model="bonusView.searchKeyword"
+                   placeholder="搜索他店员工"/>
+
+            <div class="y_btn h-3 lh-3 fr" style="border-radius: 0;"
+                 ng-tap="searchOtherEmployee()">
+                确定
+            </div>
+        </div>
+
+        <ul class="pos_pend_employee_list">
+            <li ng-repeat="item in employeeList"
+                ng-class="{pos_pend_employee_selected: view.currentServiceEmpSelectedTemp.id === item.id}">
+                <div ng-tap="serviceEmpSelect(item)">
+                    <img ng-src="{{item.baseInfo_image ? (item.baseInfo_image | urlEncode) : 'imgs/default-head.png'}}">
+
+                    <div>{{item.name}}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="modalDialogClose()">取消</div>
+        <div class="y_confirm" ng-tap="serviceEmpSelectCommit()">确定</div>
+    </div>
+</div>
+
+<!-- 服务员工选择 -->
+<div id="m-pos-service-employee-change" class="y_dialog_small">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">
+                服务员工
+            </div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body">
+        <ul class="pos_pend_employee_list">
+            <li ng-repeat="item in employeeList"
+                ng-class="{pos_pend_employee_selected: view.currentServiceEmpSelectedTemp.id === item.id}">
+                <div ng-tap="serviceEmpChange(item)">
+                    <img ng-src="{{item.baseInfo_image ? (item.baseInfo_image | urlEncode) : 'imgs/default-head.png'}}">
+
+                    <div>{{item.name}}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="modalDialogClose()">取消</div>
+        <div class="y_confirm" ng-tap="serviceEmpChangeCommit()">确定</div>
+    </div>
+</div>
+
+<div id="m-pos-change-price-popup" class="y_dialog_small pos_dialog_pocket">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">修改单价</div>
+        </div>
+        <div class="y_close" ng-tap="modalDialogClose()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body pos_chang_price">
+        <div>
+            ￥<span class="y_underline_input pos_input_focus y_underline_input_selected">{{view.changed_price | number:1}}</span>
+        </div>
+
+        <div>
+            <ul class="y_keyboard">
+                <li ng-repeat="item in numKeyList" ng-tap="changePriceInput(item)">
+                    {{item}}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="modalDialogClose()">取消</div>
+        <div class="y_confirm" ng-tap="changeProductPriceCommit(view.changed_price)">确定</div>
+    </div>
+</div>
+
+<div id="m-setting-account-loginOut" class="y_dialog_delete">
+    <div class="y_dialog_body">
+        <div class="y_one_line">
+            <%= setting.account.login_out_confirm %>？
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="modalDialogClose()">取消</div>
+        <div class="y_confirm" ng-tap="accountLoginOut()">确定</div>
+    </div>
+</div>
+
+
+<!-- 卡升级 -->
+<div id="m-pos-card-up-grade" class="y_dialog_small">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step fs-16">
+                会员卡升级
+            </div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body">
+        <ul class="y_form_normal pt-1 pl-1 pb-1 pr-1">
+            <!-- 升级卡类型 -->
+            <li class="form_row">
+                <div class="pair" style="position: relative">
+                    <label class="form_label">充值卡：</label>
+
+                    <ul>
+                        <li ng-repeat="item in rechargeCateList" ng-show="item.status !== 0" class="inlinebl"
+                            ng-tap="selectMemberCate(item)">
+                            <span class="y_select_tag"
+                                  ng-class="{y_select_tag_selected: view.upGradeModel.cardCate.id === item.id}">
+                                {{item.name}}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="modalDialogClose()">取消</div>
+        <div class="y_confirm" ng-tap="upGradeCardCommit()">确定</div>
+    </div>
+</div>

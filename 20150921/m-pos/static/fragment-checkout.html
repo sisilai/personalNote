@@ -1,0 +1,274 @@
+<div id="m-pos-checkout-popup" class="y_dialog pos_big_dialog">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <ul ng-show="!isMemberSelected() || (isTempMember() && !isMultiCardMember())"
+                class="y_step_status pos_two_step">
+                <li>散客收银</li>
+                <li class="y_step_status_selected">散客支付</li>
+                <li>员工提成</li>
+            </ul>
+
+            <ul ng-show="isMemberSelected() && !isTempMember() && !isMultiCardMember()"
+                class="y_step_status pos_two_step">
+                <li>{{memberSelected.name}}</li>
+                <li class="y_step_status_selected">会员支付</li>
+                <li>员工提成</li>
+            </ul>
+
+            <ul ng-show="isMultiCardMember() || isTempMember()" class="y_step_status pos_three_step">
+                <li>{{isTempMember() ? "散客" : memberSelected.name}}</li>
+                <li>支付方式</li>
+                <li class="y_step_status_selected">现金支付</li>
+                <li>员工提成</li>
+            </ul>
+        </div>
+        <div class="y_close" ng-tap="modalDialogClose()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body pos_dialog_body pos_big_dialog_body">
+        <div class="pos_bill_pay_money">
+            <div>
+                <!--非计次卡会员-->
+                <div class="pos_bill_info"
+                     ng-show="!isSingleRecordCardMember() && !isSingleQuarterCardMember()">
+                    <ul class="y_single_col_keyValue_left_right">
+                        <li>
+                            <label>合计：</label>
+                            <span>￥{{incomeStatus.totalMoney | number:1}}</span>
+                        </li>
+
+                        <li ng-show="isMemberSelected() && memberSelected.hasCoupon">
+                            <label>现金券：</label>
+                            <span>-￥{{incomeStatus.couponPayMoney | number:1}}</span>
+                        </li>
+
+                        <li ng-show="isMultiCardMember()">
+                            <label>卡支付：</label>
+                            <span>-￥{{(incomeStatus.rechargeCardOldPrice + incomeStatus.recordCardOldPrice) | number:1}}</span>
+                        </li>
+
+                        <li>
+                            <label>折扣：</label>
+                            <span>-￥{{incomeStatus.discountMoney | number:1}}</span>
+                        </li>
+
+                        <li ng-if="featureConf.preferentialAccess">
+                            <label>减免：</label>
+                            <span>-￥{{payStatus.billReduce | number:1}}</span>
+                        </li>
+
+                        <li class="pos_should_earn" ng-tap="adjustShouldEarn()">
+                            <label>应收：</label>
+                            <span>￥{{incomeStatus.paidMoney | number:1}}</span>
+                        </li>
+
+                        <li ng-show="isSingleRechargeCardMember()" class="pos_card_info">
+                            <label>{{memberSelected.cards[0].cardName | omission:6}}</label>
+                            <span ng-tap="singleCardRecharge(memberSelected.cards[0])" class="y_btn">充值</span>
+                        </li>
+
+                        <li ng-show="isSingleRechargeCardMember()">
+                            <label>余额：</label>
+                            <span>{{memberSelected.cards[0].balance | money:1}}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--计次卡会员-->
+                <div class="pos_bill_info"
+                     ng-show="isSingleRecordCardMember() || isSingleQuarterCardMember()">
+                    <ul class="y_single_col_keyValue_left_right">
+                        <li>
+                            <label>合计：</label>
+                            <span>￥{{incomeStatus.totalMoney | number:1}}</span>
+                        </li>
+
+                        <li ng-show="memberSelected.hasCoupon">
+                            <label>现金券：</label>
+                            <span>-￥{{incomeStatus.couponPayMoney | number:1}}</span>
+                        </li>
+
+                        <li>
+                            <label>扣次项目：</label>
+                            <span>-￥{{incomeStatus.recordCardOldPrice | number:1}}</span>
+                        </li>
+
+                        <li ng-show="!memberSelected.hasCoupon">
+                        </li>
+
+                        <li class="pos_should_earn" ng-tap="adjustShouldEarn()">
+                            <label>应收：</label>
+                            <span>￥{{incomeStatus.paidMoney | number:1}}</span>
+                        </li>
+
+                        <li class="pos_card_info">
+                            <label>{{memberSelected.cards[0].cardName | omission:6}}</label>
+                        <span ng-tap="singleCardRecharge(memberSelected.cards[0])"
+                              ng-show="isSingleRecordCardMember()">
+                            充值
+                        </span>
+                        </li>
+
+                        <li class="pos_record_card_balance"
+                            ng-if="isSingleRecordCardMember() && isEmpty(memberSelected.cards[0].recordBalance)">
+                            <label class="color_font_disabled">该卡关联服务被删除</label>
+                        </li>
+
+                        <!--被删除的服务不显示出来-->
+                        <li class="pos_record_card_balance"
+                            ng-repeat="oneGroup in memberSelected.cards[0].recordBalance"
+                            ng-show="$index <= 4">
+
+                            <label ng-if="$index !== 4">{{oneGroup.names | omission : 11}}</label>
+                            <span ng-if="$index !== 4">{{oneGroup.times | number : 0}}次</span>
+
+                            <label ng-if="$index === 4">...</label>
+                        </li>
+
+                        <li ng-show="isSingleQuarterCardMember()"
+                            ng-class="{color_font_disabled:isEmpty(memberSelected.cards[0].allServiceNames)}"
+                            style="height: auto;">
+                            {{(memberSelected.cards[0].allServiceNames || "该卡关联服务被删除") | len:80}}
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="pos_bill_pay">
+                    <!--扣次信息-->
+                    <ul class="y_single_col_keyValue_left_right pos_record_consume_times"
+                        ng-show="isSingleRecordCardMember() || isSingleQuarterCardMember()">
+                        <li ng-repeat="(key,value) in incomeStatus.servicePayTimes"
+                            ng-show="serviceIdNameMap[key] && value != 0">
+                            <label>{{serviceIdNameMap[key] | len:10}}:</label>
+                            <span>-{{value | number : 0}}</span>
+                        </li>
+                    </ul>
+
+                    <ul class="y_single_col_keyValue_left_right">
+                        <li class="pos_discount" ng-show="!isSingleRecordCardMember() && !isSingleQuarterCardMember()">
+                            <label>
+                                折扣：
+                            </label>
+                        <span>
+                            <span></span>
+                            <span class="y_underline_input" ng-if="featureConf.preferentialAccess"
+                                  ng-tap="payStatusInputFocus('billDiscount')"
+                                  ng-class="{pos_input_focus:view.inputFiled === 'billDiscount',y_underline_input_selected:view.inputFiled === 'billDiscount'}">
+                                {{(payStatus.billDiscount === 10 ? "无" : (payStatus.billDiscount | number:1))}}
+                            </span>
+
+                            <span ng-if="!featureConf.preferentialAccess">
+                                {{(payStatus.billDiscount === 10 ? "无" : (payStatus.billDiscount | number:1))}}
+                            </span>
+                        </span>
+                        </li>
+                        <li class="pos_reduce" ng-show="!isSingleRecordCardMember() && !isSingleQuarterCardMember()"
+                            ng-if="featureConf.preferentialAccess">
+                            <label>
+                                减免：
+                            </label>
+                        <span>
+                            <span>￥</span>
+                            <span class="y_underline_input"
+                                  ng-tap="payStatusInputFocus('billReduce')"
+                                  ng-class="{pos_input_focus:view.inputFiled === 'billReduce',y_underline_input_selected:view.inputFiled === 'billReduce'}">
+                                {{payStatus.billReduce | number:1}}
+                            </span>
+                        </span>
+                        </li>
+                        <li class="pos_pay_way"
+                            ng-show="isSingleRechargeCardMember()">
+                            <label>
+                                会员卡：
+                            </label>
+                        <span>
+                            <span>实收</span>
+                            <span>￥</span>
+                            <span class="y_underline_input"
+                                  ng-tap="payStatusInputFocus('cardPay')"
+                                  ng-class="{pos_input_focus:view.inputFiled === 'cardPay',y_underline_input_selected:view.inputFiled === 'cardPay'}">
+                                {{(payStatus.cardPay) | number:1}}
+                            </span>
+                        </span>
+                        </li>
+                        <li class="pos_pay_way pos_cash_pay"
+                            ng-class="{pos_record_times_split:(isSingleRecordCardMember() || isSingleQuarterCardMember())}">
+                            <label>
+                                现金：
+                            </label>
+                        <span>
+                            <span>实收</span>
+                            <span>￥</span>
+                            <span class="y_underline_input"
+                                  ng-tap="payStatusInputFocus('cashPay')"
+                                  ng-class="{pos_input_focus:view.inputFiled === 'cashPay',y_underline_input_selected:view.inputFiled === 'cashPay'}">
+                                {{payStatus.cashPay | number:1}}
+                            </span>
+                        </span>
+                        <span class="pos_change_money_enhance">
+                            <span>{{isLessThanZero(payStatus.cashChange) ? "金额不足" : "找零"}}</span>
+                            <span></span>
+                            <span>{{payStatus.cashChange | money:1}}</span>
+                        </span>
+                        </li>
+                        <li class="pos_pay_way">
+                            <label>
+                                银行卡：
+                            </label>
+                        <span>
+                            <span>实收</span>
+                            <span>￥</span>
+                            <span class="y_underline_input"
+                                  ng-tap="payStatusInputFocus('bankPay')"
+                                  ng-class="{pos_input_focus:view.inputFiled === 'bankPay',y_underline_input_selected:view.inputFiled === 'bankPay'}">
+                                {{payStatus.bankPay | number:1}}
+                            </span>
+                        </span>
+                        </li>
+
+                        <li class="h-5 mt-0">
+                            <div ng-show="isMemberSelected() && !isTempMember() && memberSelected.hasCoupon && !isMultiCardMember()">
+                                <div class="color_click_normal lh-2_5 fs-14" ng-tap="singleCardShowCouponSel()">使用现金券
+                                </div>
+                                <div class="color_font_disabled lh-2_5">{{view.couponNameList | omission:20}}</div>
+
+                                <ul class="single-coupon-display"
+                                    ng-show="view.showCouponSel"
+                                    ng-style="{bottom:getSelectTips()}">
+                                    <li class="lh-2_5"
+                                        ng-repeat="item in memberSelected.coupons"
+                                        ng-class="{color_click_normal:inCouponPayList(item)}"
+                                        ng-tap="selectPayCoupon(item)">
+                                        {{item.name}}(￥{{item.money | number:1}})
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pos_checkout_comment">
+                <textarea ng-model="checkoutCustomComment" placeholder="点击输入收银备注" ng-disabled="view.recharging"
+                          style="width: 100%;"></textarea>
+            </div>
+        </div>
+
+        <div class="pos_keyboard_normal" style="margin-left: 2.75rem;">
+            <ul class="y_keyboard">
+                <li ng-repeat="item in numKeyList" ng-tap="payStatusInput(item)">
+                    {{item}}
+                </li>
+            </ul>
+            <div class="pos_dialog_tips"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="closeCheckoutDia()">{{incomeStatus.multiCardOverMoney === 0 ? "取消" : "上一步"}}</div>
+        <div class="y_confirm" ng-tap="checkoutNextStep()">下一步</div>
+    </div>
+</div>
+

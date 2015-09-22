@@ -1,0 +1,32 @@
+<ul class="pos_pend_order_list">
+    <li ng-repeat="item in pend_pendShowList" ng-tap="pend_resumePendingOrder(item)"
+        ng-class="{pos_pend_order_selected: pend_pendBill.id === item.id}">
+        <div class="pos_pend_order_icon"
+             ng-class="{pos_pend_order_icon_selected: pend_pendBill.id === item.id}">
+        </div>
+        <span>
+            {{(item.member_name || "散客") | omission:5}}
+        </span>
+        <img src="imgs/cutting-line.png" class="pos_pend_order_split_icon">
+    </li>
+
+    <li id="m-pos-more-pend" ng-tap="pend_showHiddenPend()" style="display: none;">
+        <span class="y_three_point"></span>
+
+        <img src="imgs/cutting-line.png" class="pos_pend_order_split_icon">
+
+        <ul id="m-pos-hide-pend" class="pos_pend_order_hide_list" style="display:none;">
+            <li ng-repeat="item in pend_pendHiddenList"
+                ng-tap="pend_resumePendingOrder(item)" ng-tap-stop-bubble="true"
+                ng-class="{'pos_pend_order_selected': pend_pendBill.id === item.id}">
+                <div class="pos_pend_order_icon"
+                     ng-class="{pos_pend_order_icon_selected: pend_pendBill.id === item.id}">
+                </div>
+
+                <span>
+                    {{(item.member_name || "散客") | omission:5}}
+                </span>
+            </li>
+        </ul>
+    </li>
+</ul>
