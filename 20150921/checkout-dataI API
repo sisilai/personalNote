@@ -1,0 +1,88 @@
+注意以下表示
+xxx：表示任意字符
+...：表示以此类推
+checkout-dataI.js： 收银台数据接口
+    //初始化员工列表
+    function initEmployeeList(callback)
+    成功：callback(null, result);
+    失败：callback(error);
+
+    //初始化类别对应服务列表
+    function initCateServiceList(callback)
+    成功：
+        var model = {
+                cateServiceIdMap: { cardCateId: serviceId,... },
+                serviceIdNameMap: { serviceId: serviceName,... },
+                recordServiceInfo: [{
+                serviceNames: 'xxx',
+                serviceTimes: 'xxx',
+                bind_group: 'xxx'
+                },... ]
+        };
+        callback(null, model);
+    失败：callback(error);
+
+    //billInfo模型：没有数据的时候
+    var billInfo = {
+        serviceBill: {},
+        paymentDetailList: [],
+        projectList: [],
+        recordCardBalanceList: [],
+        quarterCardBalanceList: [],
+        presentBalanceList: [],
+        billBalanceList: [],
+        cardPaymentList: [],
+        consumeCardList: [],
+        memberScore: {},
+        usedCouponList: [],
+        depositList: [],
+        depositItemList: [],
+        depositConsumeList: [],
+        empBonusList: [],
+        newCardInfoList: []
+    }
+    //流水单、服务列表、会员卡、员工提成
+    function fillIdCode(billInfo, callback)
+    成功：callback(null);
+    失败：callback(error);
+
+    //收银台操作订单
+    function checkout(billInfo, callback)
+    成功：callback(null, data.result);
+    失败：callback(error);
+
+    //初始化挂单订单列表
+    function initPendOrderList(callback)
+    成功：callback(null, data.result);
+    失败：callback(error);
+
+    //挂单订单
+    function pendOrder(pendModel, callback)
+    参数：
+    var pendModel = {
+        pendBill: {},
+        itemList: [],
+        oldBill: {}
+    };
+    成功：callback(null, data.result);
+    失败：callback(error);
+
+    //删除挂单
+    function deletePend(delPendId, callback)
+    成功：callback(null, data.result);
+    失败：callback(error);
+
+    //上传签名图片
+    function uploadSignatureImage(signatureModel, callback)
+    参数：
+    var signatureModel = {
+        billId: "xxx",
+        imageDataBase64: "xxx"
+    };
+    成功：callback(null, data.result);
+    失败：callback(error);
+
+    //获取共同的项目
+    function commonlyItem(callback)
+    成功：callback(null, data.result);
+    失败：callback(error);

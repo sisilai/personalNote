@@ -1,0 +1,53 @@
+fragment-checkoutCommit.js:收银点结算的动作
+    //初始化模型
+    function initModel(model, callback) {
+        model.failTicket = [];
+    }
+
+    //初始化控制器
+    function initControllers($scope)
+        //billInfo模型：没有数据的时候
+        var billInfo = {
+            serviceBill: {},
+            paymentDetailList: [],
+            projectList: [],
+            recordCardBalanceList: [],
+            quarterCardBalanceList: [],
+            presentBalanceList: [],
+            billBalanceList: [],
+            cardPaymentList: [],
+            consumeCardList: [],
+            memberScore: {},
+            usedCouponList: [],
+            depositList: [],
+            depositItemList: [],
+            depositConsumeList: [],
+            empBonusList: [],
+            newCardInfoList: []
+        }
+        //现金、或者充值卡、或者计次卡....
+        $scope.normalCommit = function (billInfo, callback)
+        成功：callback(null);
+        失败：callback(error);
+
+        //重新打印失败小票
+        $scope.reprintCommit = function ()
+        成功：提示收银打印成功
+        失败：提示收银打印失败
+
+        //取消重新尝试
+        $scope.cancelReprint = function ()
+
+        //失败小票清空，$scope.failTicket = [];
+        $scope.emptyFailTicket = function ()
+
+        //新增失败小票
+        $scope.addFailTicket = function (ticket)
+
+        //重新打印小票初始化
+        $scope.reprintInit = function ()
+
+        //打印小票
+        function printConsumeTicket(billInfo, callback)
+        成功：callback(null);
+        失败：callback(error);

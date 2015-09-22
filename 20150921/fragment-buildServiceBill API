@@ -1,0 +1,31 @@
+注意以下表示
+xxx：表示任意字符
+fragment-buildServiceBill.js： 建立服务账单
+    //该方法没有实现
+    function initModel(model) {
+    }
+
+    //初始化控制器
+    function initControllers($scope)
+        //构造收银单的所有信息
+        $scope.buildServiceBillInfo = function ()
+        返回：
+            return {
+                serviceBill: {xxx:xxx,...},
+                paymentDetailList: [xxx,...],
+                projectList: [xxx,...],
+                recordCardBalanceList: [xxx,...],
+                quarterCardBalanceList: [xxx,...],
+                presentBalanceList: [xxx,...],
+                billBalanceList: [xxx,...],
+                cardPaymentList: [xxx,...],
+                consumeCardList: [xxx,...],
+                memberScore: [xxx,...],
+                usedCouponList: [xxx,...],
+                depositList: [xxx,...],
+                depositItemList: [xxx,...],
+                depositConsumeList: [xxx,...]
+            };
+
+        //建立免费绩效
+        $scope.buildFreePerformance = function (billInfo) 

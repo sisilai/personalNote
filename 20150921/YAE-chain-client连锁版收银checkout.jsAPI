@@ -1,3 +1,6 @@
+注意以下表示
+xxx：表示任意字符
+...：表示以此类推
 checkout.js： 收银台控制
     model参数模型设计如下：
     var model = {
