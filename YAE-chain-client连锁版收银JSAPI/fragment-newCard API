@@ -1,0 +1,22 @@
+fragment-newCard.js: 挂单相关逻辑
+    //该方法没有实现
+    function initModel(model) {
+
+    }
+
+    //初始化控制器
+    function initControllers($scope) {
+        // 构造开卡需要的模型（目前该方法没有使用）
+        $scope.buildNewCardModel = function (serviceBillInfo)
+        返回：（没有数据的时候）
+        return {
+            member: {},
+            memberCard: {},
+            rechargeBill: {},
+            cardBalanceList: [],
+            billBalanceList: [],
+            bonusRecords: [],
+            quarterPresentBill: {},
+            quarterRefPresents: [],
+            quarterPresents: []
+        };

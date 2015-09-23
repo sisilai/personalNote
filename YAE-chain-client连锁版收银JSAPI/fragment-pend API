@@ -1,0 +1,35 @@
+fragment-pend.js:挂单相关逻辑
+    //初始化模型
+    function initModel(model)
+
+    //初始化控制器
+    function initControllers($scope) {
+        //挂单确认
+        $scope.pend_pendingOrderCommit = function ()
+        成功：弹出提示"挂单成功"
+        失败：弹出提示"挂单失败，请稍后再试"
+
+        //挂单：展示挂单员工选择
+        $scope.pend_showPendEmployeeSelect = function ()
+
+        //挂单：弹出求值对话框
+        $scope.pend_showEvaluationDialog = function ()
+
+        //恢复单
+        $scope.pend_resumePendingOrder = function (pendOrder)
+        参数：
+            pendOrder: 挂单订单对象
+            var pendModel = {
+                pendBill: pendBill,
+                itemList: itemList,
+                oldBill: oldBill
+            };
+
+        //切换隐藏的挂单项
+        $scope.pend_showHiddenPend = function ()
+
+        //计算挂单的显示与隐藏
+        $scope.pend_countPendShow = function ()
+
+        //清除挂单
+        $scope.clearPendBill = function ()
