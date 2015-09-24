@@ -7,7 +7,8 @@ var express = require('express');
 var paginate = require('express-paginate');
 var app = express();
 
-var Users = db.model('Users');
+var User = require("./Users");
+var Users = User.get('jxgzlss1');
 Users.plugin(require('mongoose-paginate'));
 
 // keep this before all routes that will use pagination
