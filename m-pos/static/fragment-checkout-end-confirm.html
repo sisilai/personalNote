@@ -1,0 +1,97 @@
+<div id="m-pos-checkout-end-confirm" class="y_dialog_small">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">收银详情</div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body pos_checkout_success">
+        <div>
+            <span>
+                <i class="icon-ok-sign"></i>
+            </span>
+            <span>
+                收银成功
+            </span>
+        </div>
+
+        <ul class="y_single_col_keyValue_left_right">
+            <li ng-show="view.confirmInfo.isMemberSelected && !isTempMember()">
+                <label>会员:</label>
+                <span>{{view.confirmInfo.memberName}}/{{view.confirmInfo.memberNo}}</span>
+            </li>
+            <li ng-show="!view.confirmInfo.isMemberSelected || isTempMember()">
+                <label>散客收银</label>
+                <span></span>
+            </li>
+
+            <!--卡支付信息-->
+            <li ng-repeat="item in view.confirmInfo.payCardList" ng-show="view.confirmInfo.isMemberSelected">
+                <label>{{item.cardCateName}}:</label>
+
+                <span ng-if="item.type === 'recharge'">￥{{item.used | number:1}}/{{item.balance | money:1}}</span>
+                <span ng-if="item.type === 'record'">{{item.used | number:0}}次/{{item.balance | number:0}}次</span>
+                <span ng-if="item.type === 'present'">{{item.used | number:0}}次/{{item.balance | number:0}}次</span>
+                <span ng-if="item.type === 'quarter'">{{item.used | number:0}}次</span>
+                <span ng-if="item.type === 'coupon'">￥{{item.used | number:1}}</span>
+            </li>
+
+            <li ng-show="view.confirmInfo.payCash>0">
+                <label>现金收取:</label>
+                <span>￥{{view.confirmInfo.payCash | number:1}}</span>
+            </li>
+
+            <li ng-show="view.confirmInfo.payBank>0">
+                <label>银行刷卡:</label>
+                <span>￥{{view.confirmInfo.payBank | number:1}}</span>
+            </li>
+
+            <li ng-show="view.confirmInfo.isMemberSelected && !isTempMember()">
+                <label>赠送积分:</label>
+                <span>{{view.confirmInfo.presentScore | number:0}}</span>
+            </li>
+            <li ng-show="view.confirmInfo.isMemberSelected && !isTempMember()">
+                <label>剩余积分:</label>
+                <span>{{view.confirmInfo.currentScore | number:0}}</span>
+            </li>
+            <li>
+                <label></label>
+                <span>
+                    <span>总计 </span>
+                    <span>￥{{view.confirmInfo.totalMoney |number:1}}</span>
+                </span>
+            </li>
+        </ul>
+
+        <div>
+
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_confirm y_one_confirm" ng-tap="closeCheckoutConfirmPage()">确定</div>
+    </div>
+</div>
+
+<div id="m-pos-checkout-error-card" class="y_dialog_delete">
+    <div class="y_dialog_body">
+        <div class="fs-16 p-2 lh-2" style="color: #ff436d; text-align: center">
+            <span>
+                <i class="icon-remove-sign"></i>
+            </span>
+            <span>
+                收银失败
+            </span>
+        </div>
+
+        <div class="fs-16 pl-2 pt-1 pb-3 lh-2">
+            请重新选择项目后再收银
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_confirm" ng-tap="clearErrorOrderConfirm()" style="width: 100%;">
+            确认
+        </div>
+    </div>
+</div>

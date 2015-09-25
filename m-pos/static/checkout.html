@@ -1,0 +1,436 @@
+<!-- 特性模块缩写 example-feature1-area = [模块ID]-[特性ID]-area;特性ID必须与菜单链接上的特性ID保持一致-->
+<div id="m-pos-checkout-area" class="featureSpace padding-l-l">
+    <div class="check-content-area">
+        <div class="y_layout_two_column">
+            <div class="left checkout_left_fixed_width">
+                <!--服务单-->
+                    <div class="pos_order">
+                    <div class="fr" ng-tap="cancelOrder()">
+                        <span class="y_btn_light">删除</span>
+                    </div>
+
+                    <div class="fr mr-1" ng-tap="pend_showPendEmployeeSelect()">
+                        <span class="y_btn">挂单</span>
+                    </div>
+
+                    <div>服务单</div>
+                </div>
+
+                <div id="bill-product-list" class="ofh" ng-touch="searchBlur()">
+                    <!--服务单产品列表-->
+                    <ul class="pos_order_buy_product_list">
+                        <li ng-repeat="product in buyProductRecords"
+                            ng-class="{'service-employee-item': product.isFirst, pos_order_buy_product_item_selected: isProductSelected(product)}"
+                            ng-tap="selectProductOrder(product)">
+                            <!--选中状态-->
+                            <span ng-class="{y_line_point: isProductSelected(product)}"></span>
+
+                            <span>{{product.name | omission:11}}</span>
+
+                            <span ng-class="{'pr-0': isProductSelected(product)}">
+                                <input type="number" ng-model="product.saleNum" style="width: 4rem; border: 1px solid #c9c9c9; height: 2rem; color: #363636; padding-left: 0.2rem;"
+                                        ng-if="isProductSelected(product)" ng-change="changeProductSaleNum(product)" onkeyup="this.value=this.value.replace(/\D/g, '')"/>
+
+                                {{!isProductSelected(product) ? (product.saleNum | number:0) : ""}}
+                            </span>
+                            <!--改-->
+                            <span class="h-4 pt-1 w-3"
+                                  ng-tap="changeServiceEmployee(product)">
+                                <span class="y_modify_icon"></span>
+                            </span>
+
+                            <span class="price" ng-tap="changeProductPrice(product)">￥{{product.money | number:1}}</span>
+
+                            <!--删-->
+                            <span class="h-4 pt-1 w-3" ng-tap-stop-bubble="true"
+                                  ng-tap="deleteProductInOrder(product)">
+                                <span class="y_delete_icon"></span>
+                            </span>
+
+                            <span></span>
+
+                            <div ng-if="product.isFirst" class="service-employee">
+                                {{product.serviceEmployee.name}}
+                            </div>
+                        </li>
+
+                        <li class="h-3 lh-3 fs-16 pl-1"
+                            ng-if="view.currentServiceEmpSelectedShow.id">
+                            {{view.currentServiceEmpSelectedShow.name}}
+                        </li>
+
+                        <li class="no_border">
+                            <div class="color_click_normal fs-16 lh-4 ml-1"
+                                 ng-tap="showServiceEmpSelect()">
+                                选择服务员工
+                            </div>
+                        </li>
+
+                        <li class="no_border">1</li>
+                    </ul>
+                </div>
+
+                <!--服务单金额信息-->
+                <div class="pos_order_money">
+                    <ul class="y_single_col_keyValue_left_right">
+                        <li>
+                            <label style="line-height: 2rem;">
+                                {{(isMemberSelected() && !isTempMember()) ? ("会员-" + memberSelected.name + "(" + memberSelected.memberNo +
+                                ")") :
+                                "散客" | omission:16}}
+                            </label>
+                            <span ng-tap="birthdayPrivilege()">
+                                <span class="select-tag" ng-class="{selected: memberSelected.usedPrivilegeFlag}"
+                                      ng-if="isMemberSelected() && memberSelected.birthdayClose">
+                                    生日
+                                </span>
+                            </span>
+                        </li>
+
+                        <li>
+                            <label ng-show="isMemberSelected()">总余额：<span class="font-money-enhance">{{memberSelected.totalBalance | money:1}}</span></label>
+                            <span ng-show="isMemberSelected()">折扣：<span class="font-money-enhance">{{memberSelected.discountOfOneCard | number:1}}</span></span>
+                        </li>
+
+                        <li>
+                            <label>合计：</label>
+                            <span><span class="font-money-enhance">{{(incomeStatus.needToPayMoney - incomeStatus.recordCard) | money:1}}</span></span>
+                            <!--(原价{{incomeStatus.paidMoney | money:1}})-->
+                        </li>
+
+                        <li>
+                            <label ng-show="isMemberSelected()">扣次：</label>
+                            <span ng-show="isMemberSelected()">
+                                <span class="font-money-enhance">
+                                    {{(incomeStatus.payTimes + incomeStatus.quarterPayTimes) | number:0}}次
+                                </span>
+                            </span>
+                        </li>
+
+                        <li>
+                            <label ng-show="isMemberSelected()">扣钱：</label>
+                            <span ng-show="isMemberSelected()">
+                                <span class="font-money-enhance">
+                                    {{incomeStatus.rechargeCard | money:1}}
+                                </span>
+                            </span>
+                        </li>
+
+                        <li>
+                            <div class="y_btn pos_btn_big" ng-tap="showMemberSel()">会员</div>
+                            <div class="y_btn pos_btn_big ml-1" ng-tap="openCheckoutConfirmDia()">结算</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="right">
+                <!--类型列表-->
+                <div class="y_product_cate_list">
+                    <ul class="y_multi_col_list">
+                        <li>
+                            <div class="y_product_cate_item"
+                                 ng-class="{y_product_cate_list_selected: productCategorySelected === 'memberRelItem'}"
+                                 ng-tap="choiceMemberRelItem()">
+                                <span style="font-weight: bold; ">
+                                    会员资料
+                                </span>
+                            </div>
+                        </li>
+
+                        <li ng-repeat="cate in productCategoryList" ng-show="cate.status !== 0 && cate.name !== '疗程卡服务'"
+                            ng-tap="choiceCate(cate,cate.id)">
+                            <div class="y_product_cate_item"
+                                 ng-class="{y_product_cate_list_selected: productCategorySelected === cate.id}">
+                                <span>{{cate.name}}</span>
+                            </div>
+                        </li>
+
+                        <li ng-tap="choiceCardItem()">
+                            <div class="y_product_cate_item"
+                                 ng-class="{y_product_cate_list_selected: productCategorySelected === 'cardItem'}">
+                                <span>会员卡</span>
+                            </div>
+                        </li>
+
+                        <li ng-tap="choiceItemSearch()">
+                            <div class="y_product_cate_item"
+                                 ng-class="{y_product_cate_list_selected: productCategorySelected === 'search'}">
+                                <span><i class="icon-search"></i>搜索</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="position: absolute;width: 100%;height: 5rem;background-color: white;z-index: 999;" ng-show="productCategorySelected === 'search'">
+                    <div id="item-search" class="ml-1 mt-1 border_all">
+                        <span class="y_icon_search"></span>
+                    <span>
+                        <input id="item-search-input" ng-model="itemSearch" class="no_border h-3" type="text" placeholder="请输入项目名称/首字母/价格"/>
+                    </span>
+                    <span class="y_close_icon_btn">
+                        <div class="y_close_icon_gray" ng-tap="clearItemSearch()"></div>
+                    </span>
+                    </div>
+                </div>
+
+                <!--产品列表-->
+                <div id="product-item-list" class="ofh" ng-touch="searchBlur()" ng-class="{'pt-4': productCategorySelected === 'search'}">
+                    <ul>
+                        <div class="product-list" ng-if="productCategorySelected !== 'cardItem' && productCategorySelected !== 'memberRelItem'">
+                            <li ng-repeat="product in productViewArray">
+                                <div class="y_product_item" ng-tap="selectProduct(product)">
+                                    <div style="background-image: url({{product.baseInfo_image || 'imgs/default-picture.png'}})">
+
+                                    </div>
+
+                                    <div>
+                                        {{product.name}}
+                                    </div>
+                                    <div>
+                                        ￥{{product.prices_salesPrice | number:1}}
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+
+                        <div class="product-list" ng-if="productCategorySelected === 'memberRelItem'">
+                            <ul ng-show="isMemberSelected()" class="checkout-member-detail ofh">
+                                <li class="container-fluid form_row">
+                                    <div class="pt-1 fs-14">
+                                        会员资料 ：
+                                    </div>
+                                </li>
+                                <li class="container-fluid form_row">
+                                    <div class="row">
+                                        <div class="pair col-md-4">
+                                            <label class="form_label color_font_disabled">
+                                                会员姓名：
+                                            </label>
+                                        <span class="ml-0">
+                                            {{memberSelected.name}}
+                                        </span>
+                                        </div>
+
+                                        <div class="pair col-md-4">
+                                            <label class="form_label color_font_disabled">
+                                                手机：
+                                            </label>
+
+                                        <span class="ml-0">
+                                            {{memberSelected.phoneMobile}}
+                                        </span>
+                                        </div>
+
+                                        <div class="pair col-md-4">
+                                            <label class="form_label color_font_disabled">
+                                                会员号：
+                                            </label>
+
+                                        <span class="ml-0">
+                                             {{memberSelected.memberNo}}
+                                        </span>
+                                        </div>
+                                    </div>
+                                </li>
+
+
+                                <li class="container-fluid form_row" ng-repeat="card in memberSelected.rechargeCards">
+                                    <div class="row">
+                                        <div class="pair col-md-4">
+                                            <label class="form_label color_font_disabled">
+                                                卡名称：
+                                            </label>
+                                        <span class="ml-0">
+                                             {{card.cardName}}
+                                        </span>
+                                        </div>
+
+                                        <div class="pair col-md-4">
+                                            <label class="form_label color_font_disabled">
+                                                余额：
+                                            </label>
+
+                                        <span class="ml-0 font-money-enhance">
+                                              {{card.balance | money:1}}
+                                        </span>
+                                        </div>
+
+                                        <div class="pair col-md-4">
+                                            <label class="form_label color_font_disabled">
+                                                旧余额：
+                                            </label>
+
+                                        <span class="ml-0 font-money-enhance">
+                                              {{card.oldBalance | money:1}}
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="pair col-md-4">
+                                            <label class="form_label color_font_disabled">
+                                                服务折扣：
+                                            </label>
+                                            <span class="ml-0">
+                                                 {{card.discounts | number:1}}折
+                                            </span>
+                                        </div>
+
+                                        <div class="pair col-md-4">
+                                            <span class="y_btn" ng-tap="onlyCardUpGrade(card)">卡升级</span>
+                                        </div>
+                                        <div class="pair col-md-4">
+                                            <span class="y_btn" ng-tap="onlyCardRecharge(card)">充值</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="container-fluid form_row">
+                                    <div class="fs-14" ng-if="memberRelItem.length != 0">
+                                        会员疗程卡项目：
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <li ng-show="isMemberSelected()" ng-repeat="product in memberRelItem" style="vertical-align: top;">
+                                <div class="y_product_item" ng-tap="selectProduct(product)">
+                                    <div class="fs-12 pt-0_5 pl-0_5 lh-2" >
+                                        <div ng-if="product.isQuarter">开始：{{product.cardStartTime | date:'yy-MM-dd'}}</div>
+
+                                        <div ng-if="product.isQuarter">结束：{{product.cardEndTime | date:'yy-MM-dd'}}</div>
+
+                                        <div ng-if="!product.isPresent">总数：<span class="font-money-enhance fs-12">{{product.initTimes | number:0}}</span>次</div>
+
+                                        <div>剩余：<span class="font-money-enhance fs-12">{{product.remainingTimes | number:0}}</span>次</div>
+                                    </div>
+
+                                    <div class="fs-14">
+                                        {{product.name}}
+                                    </div>
+                                    <div>
+                                        ￥{{product.prices_salesPrice | number:1}}
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li ng-show="isMemberSelected()" ng-repeat="card in memberSelected.freezeCards" style="vertical-align: top;">
+                                <div class="y_product_item">
+                                    <div class="fs-12 pt-0_5 pl-0_5 lh-2" >
+                                        <div>开始：{{card.createTime | date:'yy-MM-dd'}}</div>
+
+                                        <div>冻结：{{card.freezeTime | date:'yy-MM-dd'}}</div>
+
+                                        <div>已冻结：<span class="font-money-enhance fs-12">{{card.freezeTimeArea | date:'dd'}}</span>天</div>
+                                    </div>
+                                    <div class="fs-14">
+                                        {{card.cardName}}
+                                    </div>
+                                    <div>
+                                        已冻结
+                                    </div>
+                                </div>
+                            </li>
+
+                            <ul ng-show="isMemberSelected()" class="checkout-member-detail ofh">
+                                <li class="container-fluid form_row">
+                                    <div class="fs-14 mt-1" ng-if="expireQuarterCard.length != 0">
+                                        可以续卡的年卡项目：
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <li ng-show="isMemberSelected()" ng-repeat="card in expireQuarterCard"
+                                style="vertical-align: top;">
+                                <div class="y_product_item" ng-tap="expireCardSelect(card)">
+                                    <div class="fs-12 pt-0_5 pl-0_5 lh-2">
+                                        <div>开始：{{card.dateTime | date:'yy-MM-dd'}}
+                                        </div>
+                                        <div>结束：{{card.validTime | date:'yy-MM-dd'}}
+                                        </div>
+                                        <div class="fs-14 mt-1"><span class="y_btn">续卡</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="fs-14">
+                                        {{card.cardName}}
+                                    </div>
+                                    <div ng-if="card.valid">
+                                        可提前续卡
+                                    </div>
+                                    <div ng-if="!card.valid">
+                                        已过期
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+
+                        <dev class="card-list" ng-if="productCategorySelected === 'cardItem'">
+                            <li ng-repeat="card in allCardList" ng-show="card.status !== 0">
+                                <div class="card-item"
+                                     ng-tap="selectProduct(card)">
+                                    <div class="card-name">
+                                        {{card.name | omission:18}}
+                                    </div>
+
+                                    <div ng-if="card.baseInfo_type === 'recharge'" class="card-balance">
+                                        余额：{{(card.baseInfo_minMoney + card.activeCardPresentMoney) | money:1}}
+                                    </div>
+
+                                    <div ng-if="card.baseInfo_type === 'record'" class="card-balance">
+                                        余次：{{card.totalTimes | number:0}}次
+                                    </div>
+
+                                    <div ng-if="card.baseInfo_type === 'quarter'" class="card-balance">
+                                        余次：{{card.timesLimit | number:0}}次
+                                    </div>
+
+                                    <div class="card-price">
+                                        {{card.baseInfo_minMoney | money:1}}
+                                    </div>
+                                </div>
+                            </li>
+                        </dev>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 挂单 -->
+        @@include('fragment-pend.html')
+
+        <!--结算弹出窗-->
+        @@include('fragment-checkout.html')
+
+        <!--收银确认弹出窗-->
+        @@include('fragment-checkout-end-confirm.html')
+
+        <!--会员弹出窗-->
+        @@include('fragment-member.html')
+
+        <!--会员充值-->
+        @@include('fragment-posRecharge.html')
+
+        <!--修改产品单价-->
+        @@include('fragment-pos-dialog.html')
+
+        <!--重新打印-->
+        <div id="m-pos-checkout-reprint" class="y_dialog_delete">
+            <div class="y_dialog_body">
+                <div class="y_one_line">
+                    <%= checkout.checkout_print %>
+                </div>
+            </div>
+
+            <div class="y_dialog_footer">
+                <div class="y_return" ng-tap="cancelReprint()">
+                    <%= common.label.cancel %>
+                </div>
+                <div class="y_confirm" ng-tap="reprintCommit()">
+                    <%= common.label.confirm %>
+                </div>
+            </div>
+        </div>
+
+        <!-- 提成设置 -->
+        @@include('fragment-bonus.html')
+    </div>
+</div>

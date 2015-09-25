@@ -1,0 +1,294 @@
+<div id="m-pos-member-popup" class="y_dialog">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">选择会员</div>
+        </div>
+        <div class="y_close" ng-tap="closeMemberSelDia()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body pos_dialog_body">
+        <div class="pos_member_list">
+            <div class="pos_member_search">
+                <span class="y_icon_search"></span>
+                <span>
+                    <input ng-model="memberSearch" ng-tap="inputSearchSysKey()"
+                           placeholder="请输入会员编号/姓名/手机" type="text"/>
+                </span>
+                <span class="y_close_icon_btn">
+                    <div class="y_close_icon_gray" ng-tap="clearMemberSearch()"></div>
+                </span>
+            </div>
+            <div class="pos_member_item" id="pos-member-search-list" style="position: relative">
+                <ul>
+                    <li ng-repeat="item in memberList"
+                        ng-tap="selectMember(item)"
+                        ng-class="{pos_list_item_selected:view.memberSelected.id === item.id}">
+                        <span ng-class="{y_line_point:view.memberSelected.id === item.id}"></span>
+                        <span>{{item.name}}</span>
+                        <span>{{item.phoneMobile}}</span>
+                        <span>{{item.memberNo}}</span>
+                        <span>
+                            {{item.cardCateNames | omission:8}}
+                        </span>
+                        <span ng-show="item.cardCateNames.length > 8"
+                              class="y_number_icon">
+                            {{item.cardCount}}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="inlinebl" style="margin-left:0.25rem;">
+            <ul class="y_keyboard mt-2">
+                <li ng-repeat="item in numKeyList" ng-tap="memberSearchInput(item)">
+                    {{item}}
+                </li>
+            </ul>
+            <div class="pos_dialog_tips">请选择一位会员</div>
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div ng-tap="closeMemberSelDia()" class="y_return">取消</div>
+        <div ng-tap="selMemberConfirm()" class="y_confirm">确定</div>
+    </div>
+</div>
+
+<div id="m-pos-member-card-select" class="y_dialog pos_big_dialog">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <ul class="y_step_status pos_three_step"
+                ng-class="{pos_multi_card_step_change: incomeStatus.multiCardOverMoney === 0}">
+                <li>{{isTempMember() ? "散客" : memberSelected.name}}</li>
+                <li class="y_step_status_selected">支付方式</li>
+                <li>现金支付</li>
+                <li>员工提成</li>
+            </ul>
+        </div>
+        <div class="y_close" ng-tap="closeCardSelectDia()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body pos_dialog_body pos_big_dialog_body">
+        <div class="pos_pay_item_list">
+            <div>
+                <span></span>
+                <span>服务单</span>
+                <span>原价</span>
+                <span>支付方式</span>
+                <span>折扣</span>
+                <span>实付</span>
+            </div>
+
+            <ul>
+                <li ng-repeat="item in buyProductRecords"
+                    ng-class="{pos_list_item_selected: isCompleteSameItem(item, view.preparePayItem)}"
+                    ng-tap="selectPayItem(item)">
+                    <div class="item-info">
+                        <span ng-class="{y_line_point: isCompleteSameItem(item, view.preparePayItem)}"></span>
+                        <span>{{item.saleNum | number:0 }}</span>
+                        <span>{{item.name}}</span>
+                        <span>{{item.money | money:1}}</span>
+                    </div>
+
+                    <div class="item-pay-info"
+                         ng-repeat="one in item.payCardList">
+                        <!-- 支付方式 -->
+                        <span>{{one.payInfo.cardName | omission:13}}</span>
+                        <span ng-if="isProductCannotPayByCard(item) && !one" class="color_font_disabled">
+                            现金
+                        </span>
+
+                        <!-- 折扣 -->
+                        <span>
+                            {{one.payInfo.discount ? one.payInfo.discount + '折' : '无'}}
+                        </span>
+
+                        <!-- 改折扣减免 -->
+                        <span ng-tap="modifyItemDiscount(item, one)" ng-show="featureConf.preferentialAccess && one && one.payInfo.payType === 'rechargeCard'"
+                              ng-tap-stop-bubble="true">
+                            <span class="y_modify_icon">
+
+                            </span>
+                        </span>
+
+                        <!-- 实付 -->
+                        <span ng-if="one.payInfo.payType === 'rechargeCard'"
+                              ng-class="featureConf.preferentialAccess ? 'w-10' : 'w-12'">
+                            ￥{{one.payInfo.cardPayMoney | number:1}}
+                        </span>
+                        <span ng-if="one.payInfo.payType === 'recordCard' || one.payInfo.payType === 'quarterCard' || one.payInfo.payType === 'presentService'"
+                              class="w-12">
+                            {{one.payInfo.cardPayTimes | number:0}}次({{one.payInfo.times2Money | money:1}})
+                        </span>
+                    </div>
+                </li>
+            </ul>
+            <div>
+                <span>合计</span>
+                <span>
+                    ￥{{incomeStatus.totalMoney | number:1}}
+                </span>
+
+                <span class="fr lh-4 mr-1" ng-class="{'color_font_special': incomeStatus.multiCardOverMoney > 0}">
+                    {{incomeStatus.recordCard + incomeStatus.rechargeCard | money:1}}
+                </span>
+                <!--<span>￥{{incomeStatus.multiCardOverMoney | number:1}}</span>-->
+            </div>
+
+            <div class="pos_checkout_comment">
+                <textarea ng-model="checkoutCustomComment" placeholder="点击输入收银备注"
+                          ng-disabled="view.recharging" style="width: 100%;"></textarea>
+            </div>
+        </div>
+
+        <div class="pos_pay_card_list">
+            <div id="front" class="normal">
+                <ul class="y_multi_col_list pos_card_list">
+                    <li style="display: block; text-align: center;">
+                        <div class="color_click_normal lh-2_5 fs-18" ng-tap="removeCurrentSelItemCardPay()">
+                            不用卡支付
+                        </div>
+                    </li>
+
+                    <li ng-if="memberSelected.coupons.length !== 0">
+                        <ul class="multi-coupon-display">
+                            <li ng-repeat="item in memberSelected.coupons"
+                                ng-class="{pay_coupon_selected:inCouponPayList(item)}"
+                                ng-tap="selectPayCoupon(item)">
+                                <div class="fs-14 lh-2">{{item.name}}</div>
+                                <div class="fs-12 lh-2">面值：￥{{item.money | number:0}}</div>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li ng-repeat="card in memberSelected.cards"
+                        ng-tap="selectPayCard(card)">
+                        <ul class="y_card_item pos_card_item"
+                            ng-class="{'payCardSelected': isCardPayInItem(card.id, view.preparePayItem)}">
+                            <li style="padding-bottom: 4px;">
+                                <span ng-if="card.cateType === 'recharge' " style="position: absolute; top: 0; right: 0;"
+                                      class="fr text-right fs-14 w-a y_btn"
+                                      ng-tap="multiCardRecharge(card)" ng-tap-stop-bubble="true">
+                                    充值
+                                </span>
+
+                                <label>{{card.cardName}}</label>
+                            </li>
+
+                            <li>
+                                <label>卡号：</label>
+                                <span>{{card.cardNo}}</span>
+                            </li>
+
+                            <li ng-if="isRechargeCard(card)">
+                                <label>余额：</label>
+                                <span>￥{{card.balance | number:1}}</span>
+                            </li>
+
+                            <li ng-if="isRecordCard(card)">
+                                <div class="fs-14" ng-if="isEmpty(card.recordBalance)">
+                                    <div class="fl">余次：</div>
+                                    <div style="padding-left:3.5rem;" class="color_font_disabled">该卡关联服务被删除</div>
+                                </div>
+
+                                <label ng-repeat-start="(group,value) in card.recordBalance">
+                                    {{$first ? "余次：" : ""}}
+                                </label>
+
+                                <span ng-repeat-end>
+                                    {{value.names}}({{value.times | number:0}}次)
+                                </span>
+                            </li>
+
+                            <li ng-if="isQuarterCard(card)">
+                                <label>服务：</label>
+                                <span ng-class="{color_font_disabled:isEmpty(card.allServiceNames)}">
+                                    {{(card.allServiceNames || "该卡关联服务被删除") | len:20}}
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li ng-tap="selectPayPresent(present)"
+                        ng-repeat="present in memberSelected.presents">
+                        <ul class="y_card_item pos_card_item"
+                            ng-class="{'payCardSelected': isPresentPayInItem(present.sequenceId, view.preparePayItem)}">
+                            <li>
+                                <label>赠送服务</label>
+                            </li>
+
+                            <li>
+                                <label ng-repeat-start="item in present.services">
+                                    {{$first ? "余次：" : ""}}
+                                </label>
+
+                                <span ng-repeat-end>
+                                    {{item.names}}({{item.times | number:0}}次)
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="back" class="flipped">
+                <ul class="y_form_normal pl-2_5 pt-1" style="background-color: #ffffff;height: 100%;">
+                    <li class="form_row">
+                        <span>{{multiCardCurrentEditItem.name}}折扣减免修改</span>
+                    </li>
+
+                    <li class="form_row">
+                        <div class="pair">
+                            <!-- 折扣 -->
+                            <label class="form_label">折扣：</label>
+                            <span class="form_input">
+                                <input type="number" ng-model="multiCardCurrentEditItem.discount"
+                                       placeholder="输入折扣"/>
+                                <span class="form_input_unit">折</span>
+                            </span>
+                                <span class="error multi-discount-error">
+                                0-10之间
+                            </span>
+                        </div>
+                    </li>
+
+                    <li class="form_row">
+                        <div class="pair">
+                            <!-- 折扣 -->
+                            <label class="form_label">减免：</label>
+                            <span class="form_input">
+                                <span class="abs">￥</span>
+                                <input class="pl-1" type="number" ng-model="multiCardCurrentEditItem.reduceMoney"
+                                       placeholder="输入减免"/>
+                            </span>
+                            <span class="error multi-reduce-error">
+                                0-10万之间
+                            </span>
+                        </div>
+                    </li>
+
+                    <li class="form_row mt-1">
+                        <span class="y_btn fl" ng-tap="flipToCardList()">取消</span>
+                        <span class="y_btn fr mr-2_5" ng-tap="discountReduceModifyCommit()">确定</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="select-card-error" class="pos_dialog_tips multi_card_tips"></div>
+
+            <div id="card_balance_short" class="pos_dialog_tips multi_card_tips" ng-tap="multiCardRecharge()">
+                <span>余额不足，</span>
+                <span>给会员卡充值</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div ng-tap="closeCardSelectDia()" class="y_return">取消</div>
+        <div ng-tap="selectPayCardNextStep()" class="y_confirm">下一步</div>
+    </div>
+</div>

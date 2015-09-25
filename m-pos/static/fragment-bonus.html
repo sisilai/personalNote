@@ -1,0 +1,284 @@
+<div id="bonus-setting-form" class="y_dialog pos_big_dialog" style="width:80rem;">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div ng-show="!bonusView.bonusDialogHeadType ||  bonusView.bonusDialogHeadType === 'none'"
+                 class="y_one_step">员工提成
+            </div>
+
+            <ul ng-show="bonusView.bonusDialogHeadType === 'normal'" class="y_step_status pos_two_step">
+                <li>散客收银</li>
+                <li>散客支付</li>
+                <li class="y_step_status_selected">员工提成</li>
+            </ul>
+
+            <ul ng-show="bonusView.bonusDialogHeadType === 'notMultiCardMember'" class="y_step_status pos_two_step">
+                <li>{{memberSelected.name}}</li>
+                <li>会员支付</li>
+                <li class="y_step_status_selected">员工提成</li>
+            </ul>
+
+            <ul ng-show="bonusView.bonusDialogHeadType === 'multiCardMemberTwoStep'"
+                class="y_step_status pos_three_step">
+                <li>{{memberSelected.name}}</li>
+                <li>支付方式</li>
+                <li class="y_step_status_selected">员工提成</li>
+            </ul>
+
+            <ul ng-show="bonusView.bonusDialogHeadType === 'multiCardMemberThreeStep'"
+                class="y_step_status pos_three_step">
+                <li>{{memberSelected.name || "散客"}}</li>
+                <li>支付方式</li>
+                <li>现金支付</li>
+                <li class="y_step_status_selected">员工提成</li>
+            </ul>
+        </div>
+        <div class="y_close" ng-tap="bonus_modalDialogClose()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body pos_dialog_body pos_big_dialog_body">
+        <div class="pos_bonus_left" style="width: 55rem">
+            <div class="pos_bonus_detail">
+                <span></span>
+                <span class="w-18">
+                    <span>合计</span>
+                    <span class="font-money-enhance">￥{{bonus.billInfo.totalMoney | number:1}}</span>
+                </span>
+                <span class="none w-0"></span>
+                <span></span>
+                <span class="fs-14 color_font_disable pr-0_5">
+                    {{bonus.show_fixed_bonus ? "固定提成" : ""}}
+                </span>
+                <span ng-if="bonus.show_performance" class="fs-14 color_font_disable pr-0_5">
+                    业绩
+                </span>
+                <span ng-if="bonus.showCardPerformance" class="fs-14 color_font_disable pr-0_5">
+                    划卡业绩
+                </span>
+                <span ng-if="bonus.showCashPerformance" class="fs-14 color_font_disable pr-0_5">
+                    现金业绩
+                </span>
+                <span ng-if="bonus.show_performance"></span>
+                <span ng-if="bonus.isAppoint" class="fs-14 color_font_disable pr-0_5">
+                    指定客
+                </span>
+            </div>
+
+            <ul ng-show="bonus.selected_type=='items'">
+                <li ng-repeat="project in bonus.items.projectList"
+                    ng-class="{pos_bonus_detail_selected: project.selected}"
+                    ng-tap="bonus_selectBonusProject(project)"
+                    class="pos_bonus_detail pos_bonus_item_detail">
+                    <span></span>
+                    <span>
+                        <span>{{project.name}}</span>
+                        <span></span>
+                    </span>
+                    <span>￥{{project.oldMoney | number:1}}</span>
+                    <span class="fs-14 color_font_disabled">
+                        {{project.employeeList[0].employee_name}}
+                    </span>
+
+                    <span class="pos_disable_money">
+                        <span></span>
+
+                        <span ng-show="bonus.show_fixed_bonus && project.employeeList[0]">
+                           ￥{{(project.employeeList[0].bonus + project.employeeList[0].extraBonus) | number:1}}
+                        </span>
+                    </span>
+
+                    <span ng-if="bonus.show_performance" class="pos_disable_money">
+                        <span></span>
+                        <span ng-show="bonus.show_performance && project.employeeList[0]">
+                            ￥{{project.employeeList[0].performance | number:1}}
+                        </span>
+                    </span>
+                    <span ng-if="bonus.show_performance"></span>
+
+                    <span ng-if="bonus.showCardPerformance" ng-tap-stop-bubble="true"
+                          ng-class="{pos_disable_money:(project.employeeList.length != 1)}"
+                          ng-tap="bonus_modifyPerformanceNumber(project.employeeList[0],project.employeeList,'cardPerformance',$event)">
+                        <span class="fl">
+                            {{(project.employeeList.length == 1 ? "￥" : "")}}
+                        </span>
+                        <span ng-show="project.employeeList[0]"
+                              ng-class="{y_underline_input:(project.employeeList.length == 1)}">
+                            {{(project.employeeList.length == 1 || !$first) ? "" : "￥"}}{{project.employeeList[0].cardPerformance | number:1}}
+                        </span>
+                    </span>
+
+                    <span ng-if="!bonus.show_performance && !bonus.showCardPerformance"></span>
+
+                    <span ng-if="bonus.showCashPerformance" ng-tap-stop-bubble="true"
+                          ng-class="{pos_disable_money:(project.employeeList.length != 1)}"
+                          ng-tap="bonus_modifyPerformanceNumber(project.employeeList[0],project.employeeList,'cashPerformance',$event)">
+                        <span class="fl">
+                            {{(project.employeeList.length == 1 ? "￥" : "")}}
+                        </span>
+                        <span ng-show="project.employeeList[0]"
+                              ng-class="{y_underline_input:(project.employeeList.length == 1)}">
+                            {{(project.employeeList.length == 1 || !$first) ? "" : "￥"}}{{project.employeeList[0].cashPerformance | number:1}}
+                        </span>
+                    </span>
+                    <span ng-if="!bonus.show_performance && !bonus.showCashPerformance"></span>
+
+                    <span ng-show="bonus.isAppoint">
+                        <span></span>
+                        <span class="checkbox-rec w-2 pr-0 pl-0 mr-1" ng-tap-stop-bubble="true"
+                              ng-tap="bonus_setAppointPerformance(project.employeeList[0],project.employeeList,$event)">是</span>
+                    </span>
+
+                    <span ng-tap-stop-bubble="true"
+                          ng-class="{y_delete_icon:project.employeeList[0]}"
+                          ng-tap="bonus_deleteItemsBonusRecord(0,project.employeeList[0],project.employeeList)">
+                    </span>
+                    <ul>
+                        <li class="pos_bonus_detail pos_item_bonus"
+                            ng-repeat="employee in project.employeeList"
+                            ng-show="!$first">
+                            <span></span>
+                            <span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                            <span></span>
+
+                            <span class="fs-14 color_font_disabled">{{employee.employee_name}}</span>
+
+                            <span>
+                                <span ng-show="bonus.show_fixed_bonus" class="fl">
+                                    ￥
+                                </span>
+
+                                <span class="y_underline_input" ng-tap-stop-bubble="true"
+                                      ng-show="bonus.show_fixed_bonus"
+                                      ng-tap="bonus_modifyBonusNumber(employee,project.employeeList,$event)">
+                                   {{(employee.bonus + employee.extraBonus) | number:1}}
+                                </span>
+                            </span>
+
+                            <span ng-if="bonus.show_performance">
+                                <span class="fl">
+                                    ￥
+                                </span>
+
+                                <span class="y_underline_input" ng-tap-stop-bubble="true"
+                                      ng-tap="bonus_modifyPerformanceNumber(employee,project.employeeList,'performance',$event)">
+                                    {{employee.performance | number:1}}
+                                </span>
+                            </span>
+
+                            <span ng-if="bonus.show_performance"></span>
+
+                            <span ng-if="bonus.showCardPerformance">
+                                <span class="fl">
+                                    ￥
+                                </span>
+
+                                <span class="y_underline_input" ng-tap-stop-bubble="true"
+                                      ng-tap="bonus_modifyPerformanceNumber(employee,project.employeeList,'cardPerformance',$event)">
+                                    {{employee.cardPerformance | number:1}}
+                                </span>
+                            </span>
+
+                            <span ng-if="!bonus.show_performance && !bonus.showCardPerformance"></span>
+
+                            <span ng-if="bonus.showCashPerformance">
+                                <span class="fl">
+                                    ￥
+                                </span>
+
+                                <span class="y_underline_input" ng-tap-stop-bubble="true"
+                                      ng-tap="bonus_modifyPerformanceNumber(employee,project.employeeList,'cashPerformance',$event)">
+                                    {{employee.cashPerformance | number:1}}
+                                </span>
+                            </span>
+
+                            <span ng-if="!bonus.show_performance && !bonus.showCashPerformance"></span>
+
+                            <span ng-show="bonus.isAppoint">
+                                <span></span>
+                                <span class="checkbox-rec w-2 pr-0 pl-0 mr-1" ng-tap-stop-bubble="true"
+                                      ng-tap="bonus_setAppointPerformance(employee,project.employeeList,$event)">是</span>
+                            </span>
+
+                            <span class="y_delete_icon" ng-tap-stop-bubble="true"
+                                  ng-tap="bonus_deleteItemsBonusRecord($index,employee,project.employeeList)">
+                            </span>
+                        </li>
+                    </ul>
+
+                    <span class="y_line_point_auto"></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="pos_bonus_right">
+            <div id="bonus-employee" class="custom-flip bonus-employee"
+                 ng-class="{normal:bonus_flipStatus === 'employee', flipped:bonus_flipStatus !== 'employee'}"
+                 style="height: 100%;">
+
+                <div style="border-radius: 4px;" class="border_all h-3 m-0_5 ofh">
+                    <span class="y_icon_search"></span>
+
+                    <input type="text" class="w-11 no_border fs-14" style="height: 34px;"
+                           ng-model="bonusView.searchKeyword"
+                           placeholder="搜索他店员工"/>
+
+                    <div class="y_btn h-3 lh-3 fr" style="border-radius: 0;"
+                         ng-tap="searchOtherEmployee()">
+                        确定
+                    </div>
+                </div>
+
+                <ul class="pos_bonus_employee_list" ng-class="{max_60_height: selectedStorageItem}">
+                    <li class="employee_item"
+                        ng-repeat="item in employeeList"
+                        ng-tap="bonus_selectEmployee(item)">
+                        <img ng-src="{{item.baseInfo_image ? (item.baseInfo_image | urlEncode) : 'imgs/default-head.png'}}">
+
+                        <div>{{item.name | omission:3}}</div>
+                    </li>
+                </ul>
+                <div class="storage_item" ng-show="selectedStorageItem">
+                    <div class="item_area"><div class="storage_item_img_container">
+                        <div class="storage_item_name">
+                            {{selectedStorageItem.name}}
+                        </div>
+                        <div class="storage_item_price">
+                            ￥{{selectedStorageItem.price}}
+                        </div>
+                    </div></div>
+                    <div class="item_area storage_info_panel">
+                        <div>库存<span>{{selectedStorageItem.count | number}}</span></div>
+                        <div>销售<span>{{selectedStorageItem.saleNum | number}}</span></div>
+                        <div>剩余<span class="color_font_special">{{selectedStorageItem.leftCount | number}}</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bonus-keyboard" class="custom-flip flipped bonus-keyboard"
+                 ng-class="{normal:bonus_flipStatus === 'keyboard', flipped:bonus_flipStatus !== 'keyboard'}">
+                <div class="color_click_normal fs-16" ng-tap="bonus_backEmployeeList()">
+            <span class="y_btn">
+                员工
+            </span>
+                </div>
+                <ul class="y_keyboard mt-2" style="margin-left:2.75rem;">
+                    <li ng-repeat="item in numKeyList" ng-tap="bonus_modifyBonusOrPerformanceInput(item)">
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pos_dialog_tips bonus_dialog_tips"></div>
+        </div>
+
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="bonus_backFrontStep()">{{bonusView.bonusCancelBtn}}</div>
+        <div class="y_confirm" ng-tap="bonus_commit()">下一步</div>
+    </div>
+</div>

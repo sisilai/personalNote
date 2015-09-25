@@ -1,0 +1,270 @@
+<div id="m-pos-recharge-rechargeCard" class="y_dialog_small" style="min-height: 24rem;">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">
+                会员卡({{view.rechargingCard.cardNo}})充值
+            </div>
+        </div>
+        <div class="y_close" ng-tap="closeCardRechargeDia()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body" style="min-height:16rem;">
+        <ul class="y_form_normal pt-1 pb-1 pl-1 pr-1">
+            <li class="form_row">
+                <div class="pair">
+                    <!-- 充值金额 -->
+                    <label class="form_label">充值金额：</label>
+                    <span class="form_input">
+                       <span class="abs">￥</span>
+                       <input class="pl-1" type="number" ng-model="cardRecharge.rechargeMoney"
+                              placeholder="输入金额"/>
+                    </span>
+                    <span class="error pos-recharge-error">
+                        0-10万之间的数字
+                    </span>
+                </div>
+            </li>
+
+            <li class="form_row">
+                <div class="pair">
+                    <label class="form_label"
+                           ng-class="{color_font_disabled:view.rechargingCard.inverse_ratio != 1}">
+                        赠送金额：
+                    </label>
+                    <span ng-class="{form_input:view.rechargingCard.inverse_ratio == 1}" class="ml-0">
+                        <span class="abs">￥</span>
+                        <input class="pl-1" type="number" ng-model="cardRecharge.presentMoney" placeholder="输入赠送金额"
+                               ng-show="view.rechargingCard.inverse_ratio == 1"/>
+
+                        <span class="pl-1" ng-show="view.rechargingCard.inverse_ratio != 1">
+                            {{cardRecharge.presentMoney || 0}}
+                        </span>
+                    </span>
+                    <span class="error pos-recharge-present-error">
+                        0-10万之间的数字
+                    </span>
+                </div>
+            </li>
+
+            <!-- 支付方式 -->
+            <li class="form_row">
+                <div class="pair">
+                    <label class="form_label">支付方式：</label>
+
+                    <div>
+                        <ul>
+                            <li class="inlinebl"
+                                ng-tap="switchRechargePayMethod('cash')">
+                                <span class="y_select_tag"
+                                      ng-class="{y_select_tag_selected:cardRecharge.payMethod === 'cash'}">
+                                    <%= checkout.cash %>
+                                </span>
+                            </li>
+                            <li class="inlinebl"
+                                ng-tap="switchRechargePayMethod('bank')">
+                                <span class="y_select_tag"
+                                      ng-class="{y_select_tag_selected:cardRecharge.payMethod === 'bank'}">
+                                    <%= checkout.bankcard %>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <!-- 销售员工 -->
+            <li class="form_row">
+                <div class="pair" style="position: relative">
+                    <label class="form_label">充值员工：</label>
+
+                    <div style="max-height: 20rem;" class="ofa">
+                        <ul>
+                            <li class="inlinebl"
+                                ng-repeat="item in employeeList"
+                                ng-tap="selectRechargeEmpBonus(item)">
+                                <span class="y_select_tag"
+                                      ng-class="{y_select_tag_selected:isEmpInList(cardRecharge.bonusEmpList, item)}">
+                                    {{item.name}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="closeCardRechargeDia()">取消</div>
+        <div class="y_confirm" ng-tap="cardRechargeCommit()">确定</div>
+    </div>
+</div>
+
+<div id="m-pos-recharge-recordCard" class="y_dialog_small" style="min-height: 24rem;">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">
+                会员卡({{view.rechargingCard.cardNo}})充值
+            </div>
+        </div>
+        <div class="y_close" ng-tap="closeCardRechargeDia()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body" style="min-height: 16rem;">
+        <ul class="y_form_normal pt-1 pl-1 pb-1 pr-1">
+            <!-- 记次卡充值金额 -->
+            <li class="form_row">
+                <div class="pair">
+                    <label class="form_label">充值金额：</label>
+
+                    <div>
+                        <ul>
+                            <li class="inlinebl"
+                                ng-repeat="item in recordCardRecTimes"
+                                ng-tap="selectRecordRechargeTimes(item)">
+                                <span class="y_select_tag"
+                                      ng-class="{y_select_tag_selected: cardRecharge.rechargeMultiple === item}">
+                                       {{cardRecharge.rechargingCardCate.baseInfo_minMoney * item | number:0}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <!-- 计次卡增加次数 -->
+            <li class="form_row container-fluid"
+                ng-repeat="item in cardRecharge.rechargingCardCate.cateServiceGrouped">
+                <div class="pair col-md-6">
+                    <label class="form_label_disable">服务项目：</label>
+
+                    <div>{{item.names}}</div>
+                </div>
+                <div class="pair col-md-6">
+                    <label class="form_label_disable">服务次数：</label>
+
+                    <div>{{item.times * cardRecharge.rechargeMultiple}}次</div>
+                </div>
+            </li>
+
+            <!-- 支付方式 -->
+            <li class="form_row">
+                <div class="pair">
+                    <label class="form_label">支付方式：</label>
+
+                    <div>
+                        <ul>
+                            <li class="inlinebl"
+                                ng-tap="switchRechargePayMethod('cash')">
+                                <span class="y_select_tag"
+                                      ng-class="{y_select_tag_selected:cardRecharge.payMethod === 'cash'}">
+                                    <%= checkout.cash %>
+                                </span>
+                            </li>
+                            <li class="inlinebl"
+                                ng-tap="switchRechargePayMethod('bank')">
+                                <span class="y_select_tag"
+                                      ng-class="{y_select_tag_selected:cardRecharge.payMethod === 'bank'}">
+                                    <%= checkout.bankcard %>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+
+            <!-- 销售员工 -->
+            <li class="form_row">
+                <div class="pair" style="position: relative">
+                    <label class="form_label">充值员工：</label>
+
+                    <div>
+                        <ul>
+                            <li class="inlinebl"
+                                ng-repeat="item in employeeList"
+                                ng-tap="selectRechargeEmpBonus(item)">
+                                <span class="y_select_tag"
+                                      ng-class="{y_select_tag_selected:isEmpInList(cardRecharge.bonusEmpList, item)}">
+                                    {{item.name}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="closeCardRechargeDia()">取消</div>
+        <div class="y_confirm" ng-tap="cardRechargeCommit()">确定</div>
+    </div>
+</div>
+
+<div id="m-pos-recharge-expireCard" class="y_dialog_small" style="min-height: 24rem;">
+    <div class="y_dialog_header">
+        <div class="y_title">
+            <div class="y_one_step">
+                年卡续卡
+            </div>
+        </div>
+        <div class="y_close" ng-tap="closeCardRechargeDia()">
+            <div class="y_close_icon"></div>
+        </div>
+    </div>
+
+    <div class="y_dialog_body" style="min-height:16rem;">
+        <ul class="y_form_normal pt-1 pb-1 pl-1 pr-1">
+            <li class="form_row">
+                <div class="pair">
+                    <label class="form_label">
+                        续卡金额：
+                    </label>
+                    <span class="ml-0">
+                        <span class="abs">￥</span>
+                        <span class="pl-1">
+                            {{expireCardRecharge.balance || 0}}
+                        </span>
+                    </span>
+                </div>
+            </li>
+
+            <li class="form_row">
+                <div class="pair">
+                    <label class="form_label">折扣：</label>
+                    <span class="form_input fl ml-0">
+                       <input class="pl-1" type="number" ng-model="expireCardRecharge.discount"
+                              placeholder="输入折扣"/>
+                    </span>
+                    <span class="form_input_desc">折</span>
+                    <span class="error pos-expireCardRecharge-error">
+                        0-10之间的数字
+                    </span>
+                </div>
+            </li>
+
+            <li class="form_row">
+                <div class="pair">
+                    <label class="form_label">
+                        实际金额：
+                    </label>
+                    <span class="ml-0">
+                        <span class="abs">￥</span>
+                        <span class="pl-1">
+                            {{expireCardRecharge.balance*expireCardRecharge.discount/10 || 0}}
+                        </span>
+                    </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="y_dialog_footer">
+        <div class="y_return" ng-tap="closeCardRechargeDia()">取消</div>
+        <div class="y_confirm" ng-tap="expireCardRechargeCommit()">确定</div>
+    </div>
+</div>
