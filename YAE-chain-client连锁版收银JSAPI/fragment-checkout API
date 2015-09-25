@@ -11,9 +11,7 @@ fragment-checkout.js： 收银台模块
     function initControllers($scope) {
 
         //判断是否小于0
-        $scope.isLessThanZero = function (num) {
-            return Number(num) < 0;
-        };
+        $scope.isLessThanZero = function (num)
         参数：
             num: 数字
         返回：
